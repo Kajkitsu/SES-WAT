@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "58644959002",
+    "firebase_url": "https://ses-wat.firebaseio.com",
+    "project_id": "ses-wat",
+    "storage_bucket": "ses-wat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58644959002:android:96b86c83af0d033b27e6a3",
+        "android_client_info": {
+          "package_name": "pl.edu.wat.ses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58644959002-0p495cue36fm6pk6nv4br2dtdd740kjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCUX59CUMljUb5Hpc_OzCEeGanH-OGU6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58644959002-0p495cue36fm6pk6nv4br2dtdd740kjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58644959002:android:cbca8183d80bad4827e6a3",
+        "android_client_info": {
+          "package_name": "pl.edu.wat.seswat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58644959002-0p495cue36fm6pk6nv4br2dtdd740kjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCUX59CUMljUb5Hpc_OzCEeGanH-OGU6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58644959002-0p495cue36fm6pk6nv4br2dtdd740kjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
