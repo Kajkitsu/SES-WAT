@@ -18,5 +18,9 @@
     <string name="update">Update</string>
     <string name="start">Start</string>
     <string name="start_screen">Start screen!</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>

@@ -272,7 +272,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
         } else if (i == R.id.verifyEmailButton) {
             sendEmailVerification()
         } else if (i == R.id.startAppButton) {
-            val myIntent = Intent(this, UserMenuActivity::class.java)
+            val myIntent = Intent(this, MainMenuActivity::class.java)
             startActivity(myIntent)
         }
     }
