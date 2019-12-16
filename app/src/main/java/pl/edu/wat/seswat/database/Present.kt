@@ -1,13 +1,13 @@
 package pl.edu.wat.seswat.database
 
-import com.google.firebase.firestore.IgnoreExtraProperties
 
-@IgnoreExtraProperties
 data class Present(
-    var presentID: String?,
-    var classID: String?,
-    var userID: String?,
-    var timeOfAddToList: String?,
-    var confirmed: Boolean?
+    var timeOfAddToList: String? =null,
+    var lectureID: String? = null,
+    var presentID: String? = null,
+    var confirmed: Boolean? = null,
+    var userID: String? = null
+
+
 )
 
