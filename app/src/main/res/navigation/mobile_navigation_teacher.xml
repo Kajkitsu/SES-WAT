@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_teacher"
+    app:startDestination="@+id/select_list">
+
+    <fragment
+        android:id="@+id/select_list"
+        android:name="pl.edu.wat.seswat.ui.addAttendance.SelectAttendanceListFragment"
+        android:label="Wybierz liste"
+        tools:layout="@layout/fragment_select_attendance_list" />
+
+    <fragment
+        android:id="@+id/navigation_present_list"
+        android:name="pl.edu.wat.seswat.ui.myAttendanceList.MyAttendanceListFragment"
+        android:label="Lista obecnosci"
+        tools:layout="@layout/fragment_my_attendance_list" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="pl.edu.wat.seswat.ui.settings.SettingsFragment"
+        android:label="Ustawienia"
+        tools:layout="@layout/fragment_settings" />
+
+
+</navigation>

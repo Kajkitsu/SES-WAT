@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import pl.edu.wat.seswat.R
+import pl.edu.wat.seswat.database.FirestoreDataFunctions
 
 class SelectAttendanceListFragment : Fragment() {
 
@@ -28,11 +29,17 @@ class SelectAttendanceListFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_select_attendance_list, container, false)
 
         val spinnerSubject: Spinner = root.findViewById(R.id.spinner_lecture)
-        selectAttendanceListViewModel.fetchSpinnerSubjectStringListItems().observe(this, Observer {
+        FirestoreDataFunctions().getAllSubjectList().observe(this, Observer {
             if(it!=null) {
                 Log.d(TAG, it.toString())
+
+                val listArray: ArrayList<String> = ArrayList()
+                for (subject in it){
+                    listArray.add(subject.name.toString())
+                }
+
                 val spinnerAdapter: ArrayAdapter<String> =
-                    ArrayAdapter(this.context!!, R.layout.support_simple_spinner_dropdown_item, it)
+                    ArrayAdapter(this.context!!, R.layout.support_simple_spinner_dropdown_item, listArray)
                 spinnerSubject.adapter = spinnerAdapter
             }
         })

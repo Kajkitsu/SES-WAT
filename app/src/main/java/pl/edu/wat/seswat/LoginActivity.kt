@@ -7,14 +7,16 @@ import android.text.TextUtils
 import android.view.View
 import android.util.Log
 import android.widget.*
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.functions.FirebaseFunctions
+import pl.edu.wat.seswat.database.FirestoreDataFunctions
+import pl.edu.wat.seswat.database.User
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener  {
+class LoginActivity : AppCompatActivity(), View.OnClickListener  {
 
     val TAG = "LoginActivity"
 
@@ -23,14 +25,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
     private var mEmailField: EditText? = null
     private var mPasswordField: EditText? = null
 
-
+    private var userData: MutableLiveData<User>? = null
     private var mFunctions: FirebaseFunctions? = null
     private var mAuth: FirebaseAuth? = null
 
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
 
         // Views
         mStatusTextView = findViewById(R.id.status)
@@ -48,6 +50,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
 
         mAuth = FirebaseAuth.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
+
+        userData = FirestoreDataFunctions().getUserData(mAuth!!.currentUser?.uid)
     }
 
 
@@ -83,7 +87,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
                         task.exception
                     )
                     Toast.makeText(
-                        this@MainActivity, "Authentication failed.",
+                        this@LoginActivity, "Authentication failed.",
                         Toast.LENGTH_SHORT
                     ).show()
                     updateUI(null)
@@ -142,15 +146,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = mAuth?.currentUser
+                    userData = FirestoreDataFunctions().getUserData(mAuth!!.currentUser?.uid)
                     updateUI(user)
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
-                        this@MainActivity, "Authentication failed.",
+                        this@LoginActivity, "Authentication failed.",
                         Toast.LENGTH_SHORT
                     ).show()
                     updateUI(null)
+                    userData=null
                 }
 
                 // [START_EXCLUDE]
@@ -165,6 +172,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
     private fun signOut() {
         mAuth?.signOut()
         updateUI(null)
+        userData=null
     }
 
     private fun sendEmailVerification() {
@@ -183,14 +191,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
 
                 if (task.isSuccessful) {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@LoginActivity,
                         "Verification email sent to " + user.email,
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
                     Log.e(TAG, "sendEmailVerification", task.exception)
                     Toast.makeText(
-                        this@MainActivity,
+                        this@LoginActivity,
                         "Failed to send verification email.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -233,6 +241,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
         return valid
     }
 
+
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             mStatusTextView?.text = getString(
@@ -241,13 +250,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
             )
             mDetailTextView?.text = getString(R.string.firebase_status_fmt, user.uid)
 
+
             findViewById<View>(R.id.emailPasswordButtons).visibility = View.GONE
             findViewById<View>(R.id.emailPasswordFields).visibility = View.GONE
             findViewById<View>(R.id.startAppButton).visibility = View.VISIBLE
             findViewById<View>(R.id.signedInButtons).visibility = View.VISIBLE
             findViewById<View>(R.id.verifyEmailButton).isEnabled = !user.isEmailVerified
             findViewById<View>(R.id.startAppButton).isEnabled = user.isEmailVerified
-
 
         } else {
             mStatusTextView?.setText(R.string.signed_out)
@@ -272,8 +281,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
         } else if (i == R.id.verifyEmailButton) {
             sendEmailVerification()
         } else if (i == R.id.startAppButton) {
-            val myIntent = Intent(this, MainMenuActivity::class.java)
-            startActivity(myIntent)
+            if (userData != null){
+                Log.d(TAG, "user data"+userData)
+                if (userData!!.value?.isTeacher!!){
+                    val myIntent = Intent(this, TeacherMenuActivity::class.java)
+                    startActivity(myIntent)
+                }
+                else{
+                    val myIntent = Intent(this, StudentMenuActivity::class.java)
+                    startActivity(myIntent)
+                }
+            }
+
+
         }
     }
 }

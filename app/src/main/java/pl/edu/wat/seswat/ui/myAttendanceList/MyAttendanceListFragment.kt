@@ -1,4 +1,4 @@
-package pl.edu.wat.seswat.ui.presentList
+package pl.edu.wat.seswat.ui.myAttendanceList
 
 
 import android.os.Bundle
@@ -18,10 +18,10 @@ import pl.edu.wat.seswat.RecyclerViewAdapter
 import pl.edu.wat.seswat.database.Lecture
 import pl.edu.wat.seswat.database.Present
 
-class PresentListFragment : Fragment(), View.OnClickListener {
+class MyAttendanceListFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var presentListViewModel: PresentListViewModel
-    private var TAG = "PresentListFragment"
+    private lateinit var myAttendanceListViewModel: MyAttendanceListViewModel
+    private var TAG = "MyAttendanceListFragment"
     lateinit var recycler: RecyclerView
     lateinit var adapter: RecyclerViewAdapter
     var lecture = ArrayList<Lecture>()
@@ -36,21 +36,19 @@ class PresentListFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        presentListViewModel =
-            ViewModelProviders.of(this).get(PresentListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_present_list, container, false)
+        myAttendanceListViewModel =
+            ViewModelProviders.of(this).get(MyAttendanceListViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_my_attendance_list, container, false)
 //        val textView: TextView = root.findViewById(R.id.text_dashboard)
-//        presentListViewModel.text.observe(this, Observer {
+//        myAttendanceListViewModel.text.observe(this, Observer {
 //            textView.text = it
 //        })
 
 
         mRefreshButton = root.findViewById(R.id.refresh_button)
-        mTestButton = root.findViewById(R.id.button_test_1)
 
         // Buttons
         root.findViewById<View>(R.id.refresh_button).setOnClickListener(this)
-        root.findViewById<View>(R.id.button_test_1).setOnClickListener(this)
         recycler = root.findViewById(R.id.recycler_view_present_list)
 
         updatePresentList()
@@ -124,9 +122,6 @@ class PresentListFragment : Fragment(), View.OnClickListener {
         val i = v.id
         if (i == R.id.refresh_button) {
             updatePresentList()
-        } else if(i == R.id.button_test_1){
-            Log.d(TAG, "${present}")
-            Log.d(TAG, "count =${adapter.itemCount}")
         }
     }
 

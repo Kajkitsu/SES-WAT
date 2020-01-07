@@ -4,10 +4,11 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class User(
-    var userID: String?,
-    var name: String?,
-    var surname: String?,
-    var isTeacher: Boolean?,
-    var email: String?
+    var userID: String? = null,
+    var name: String? = null,
+    var surname: String? = null,
+    @field:JvmField
+    var isTeacher: Boolean? = null,
+    var email: String? = null
 )
 
