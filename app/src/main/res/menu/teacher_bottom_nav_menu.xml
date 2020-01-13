@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/select_list"
+        android:id="@+id/navigation_select_list"
         android:icon="@drawable/ic_playlist_add_black_24dp"
-        android:title="Lista" />
+        android:title="Listy obecnosci" />
 
     <item
-        android:id="@+id/navigation_present_list"
+        android:id="@+id/navigation_attendance_list_options"
         android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-        android:title="Lista studentow" />
+        android:title="Opcje listy" />
 
     <item
         android:id="@+id/navigation_settings"

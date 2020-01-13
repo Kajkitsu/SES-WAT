@@ -1,4 +1,4 @@
-package pl.edu.wat.seswat
+package pl.edu.wat.seswat.ui.teacher.selectAttendanceList
 
 
 
@@ -15,14 +15,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.LinearLayout
-import android.widget.Toast
+import pl.edu.wat.seswat.R
 import java.text.SimpleDateFormat
 
 
-class RecyclerViewAdapterSelectList(
+class RecyclerViewAdapterSelectAttendanceList(
     attendanceList: MutableLiveData<ArrayList<AttendanceList>>,
     context: Context?
-) : RecyclerView.Adapter<RecyclerViewAdapterSelectList.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewAdapterSelectAttendanceList.ViewHolder>() {
 
     private var attendanceList: ArrayList<AttendanceList>? = attendanceList.value
     private var mContext: Context? = context
@@ -33,7 +33,7 @@ class RecyclerViewAdapterSelectList(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_teacher_list, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_t_select_attendance_lists, parent, false)
         return ViewHolder(view)
     }
 
@@ -181,12 +181,12 @@ class RecyclerViewAdapterSelectList(
 //        return 0
 //    }
 //
-//    companion object CREATOR : Parcelable.Creator<RecyclerViewAdapterSelectList> {
-//        override fun createFromParcel(parcel: Parcel): RecyclerViewAdapterSelectList {
-//            return RecyclerViewAdapterSelectList(parcel)
+//    companion object CREATOR : Parcelable.Creator<RecyclerViewAdapterSelectAttendanceList> {
+//        override fun createFromParcel(parcel: Parcel): RecyclerViewAdapterSelectAttendanceList {
+//            return RecyclerViewAdapterSelectAttendanceList(parcel)
 //        }
 //
-//        override fun newArray(size: Int): Array<RecyclerViewAdapterSelectList?> {
+//        override fun newArray(size: Int): Array<RecyclerViewAdapterSelectAttendanceList?> {
 //            return arrayOfNulls(size)
 //        }
 //    }

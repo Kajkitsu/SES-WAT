@@ -12,10 +12,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".StudentMenuActivity"
+            android:name=".ui.student.StudentMenuActivity"
             android:label="@string/title_activity_main_menu" />
         <activity
-            android:name=".TeacherMenuActivity" />
+            android:name=".ui.teacher.TeacherMenuActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package pl.edu.wat.seswat.ui.addAttendance
+package pl.edu.wat.seswat.ui.teacher.selectAttendanceList
 
 import android.os.Bundle
 import android.util.Log
@@ -15,14 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import pl.edu.wat.seswat.R
-import pl.edu.wat.seswat.RecyclerViewAdapterSelectList
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 
-class SelectAttendanceListFragment : Fragment() {
+class TSelectAttendanceListFragment : Fragment() {
 
-    private lateinit var selectAttendanceListViewModel: SelectAttendanceListViewModel
+    private lateinit var tSelectAttendanceListViewModel: TSelectAttendanceListViewModel
     lateinit var recycler: RecyclerView
-    var adapter: RecyclerViewAdapterSelectList = RecyclerViewAdapterSelectList(MutableLiveData(),this.context)
+    var adapterAttendance: RecyclerViewAdapterSelectAttendanceList = RecyclerViewAdapterSelectAttendanceList(MutableLiveData(),this.context)
     val TAG = "SelectAttendanceListFr"
 
 
@@ -31,9 +30,9 @@ class SelectAttendanceListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        selectAttendanceListViewModel =
-            ViewModelProviders.of(this).get(SelectAttendanceListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_select_attendance_list, container, false)
+        tSelectAttendanceListViewModel =
+            ViewModelProviders.of(this).get(TSelectAttendanceListViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_t_select_attendance_list, container, false)
 
         val spinnerSubject: Spinner = root.findViewById(R.id.spinner_lecture)
         recycler = root.findViewById(R.id.recycler_view_select_list)
@@ -60,7 +59,7 @@ class SelectAttendanceListFragment : Fragment() {
 
 
 //        val textView: TextView = root.findViewById(R.id.text_home)
-//        selectAttendanceListViewModel.text.observe(this, Observer {
+//        TSelectAttendanceListViewModel.text.observe(this, Observer {
 //            textView.text = it
 //        })
         return root
@@ -68,12 +67,12 @@ class SelectAttendanceListFragment : Fragment() {
 
     fun initRecyclerView(){
         var mAuth = FirebaseAuth.getInstance()
-        recycler.setAdapter(adapter)
+        recycler.setAdapter(adapterAttendance)
         recycler.setLayoutManager(LinearLayoutManager(this.context))
 
         mAuth.currentUser?.uid?.let { FirestoreDataFunctions().getTeacherAttendanceList(it).observe(this, Observer {
             Log.d(TAG," FirestoreDataFunctions().getTeacherAttendanceList(it).observe")
-            adapter.setList(it)
+            adapterAttendance.setList(it)
         })
 
         }
@@ -84,9 +83,9 @@ class SelectAttendanceListFragment : Fragment() {
 
 
     fun updateRecyclerView(){
-        adapter =
-            RecyclerViewAdapterSelectList(MutableLiveData(),this.context)
-        recycler.setAdapter(adapter)
+        adapterAttendance =
+            RecyclerViewAdapterSelectAttendanceList(MutableLiveData(),this.context)
+        recycler.setAdapter(adapterAttendance)
         recycler.setLayoutManager(LinearLayoutManager(this.context))
 
     }

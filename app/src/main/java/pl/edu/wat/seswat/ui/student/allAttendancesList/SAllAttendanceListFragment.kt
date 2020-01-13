@@ -1,4 +1,4 @@
-package pl.edu.wat.seswat.ui.myAttendanceList
+package pl.edu.wat.seswat.ui.student.allAttendancesList
 
 
 import android.os.Bundle
@@ -14,16 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import pl.edu.wat.seswat.R
-import pl.edu.wat.seswat.RecyclerViewAdapter
 import pl.edu.wat.seswat.database.Lecture
 import pl.edu.wat.seswat.database.Present
 
-class MyAttendanceListFragment : Fragment(), View.OnClickListener {
+class SAllAttendanceListFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var myAttendanceListViewModel: MyAttendanceListViewModel
-    private var TAG = "MyAttendanceListFragment"
+    private lateinit var sAllAttendanceListViewModel: SAllAttendanceListViewModel
+    private var TAG = "SAllAttendanceListFragment"
     lateinit var recycler: RecyclerView
-    lateinit var adapter: RecyclerViewAdapter
+    lateinit var adapterAllAttendance: RecyclerViewAdapterAllAttendance
     var lecture = ArrayList<Lecture>()
     var present = ArrayList<Present>()
     var mAuth = FirebaseAuth.getInstance()
@@ -36,11 +35,11 @@ class MyAttendanceListFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        myAttendanceListViewModel =
-            ViewModelProviders.of(this).get(MyAttendanceListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_my_attendance_list, container, false)
+        sAllAttendanceListViewModel =
+            ViewModelProviders.of(this).get(SAllAttendanceListViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_s_all_attendance_list, container, false)
 //        val textView: TextView = root.findViewById(R.id.text_dashboard)
-//        myAttendanceListViewModel.text.observe(this, Observer {
+//        SAllAttendanceListViewModel.text.observe(this, Observer {
 //            textView.text = it
 //        })
 
@@ -59,8 +58,9 @@ class MyAttendanceListFragment : Fragment(), View.OnClickListener {
 
 
     fun updateRecyclerView(){
-        adapter = RecyclerViewAdapter(present,lecture)
-        recycler.setAdapter(adapter)
+        adapterAllAttendance =
+            RecyclerViewAdapterAllAttendance(present, lecture)
+        recycler.setAdapter(adapterAllAttendance)
         recycler.setLayoutManager(LinearLayoutManager(this.context))
     }
 

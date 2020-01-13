@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.functions.FirebaseFunctions
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.database.User
+import pl.edu.wat.seswat.ui.student.StudentMenuActivity
+import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
 
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener  {

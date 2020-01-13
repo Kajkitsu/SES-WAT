@@ -1,13 +1,12 @@
-package pl.edu.wat.seswat.ui.addAttendance
+package pl.edu.wat.seswat.ui.teacher.selectAttendanceList
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.database.Subject
 
-class SelectAttendanceListViewModel : ViewModel() {
+class TSelectAttendanceListViewModel : ViewModel() {
 
 
     fun fetchSpinnerSubjectStringListItems(): MutableLiveData<ArrayList<Subject>> {

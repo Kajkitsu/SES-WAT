@@ -1,4 +1,4 @@
-package pl.edu.wat.seswat
+package pl.edu.wat.seswat.ui.student.allAttendancesList
 
 
 import android.annotation.SuppressLint
@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.Lecture
 import pl.edu.wat.seswat.database.Present
 
@@ -17,21 +18,21 @@ import pl.edu.wat.seswat.database.Present
 
 
 
-class RecyclerViewAdapter(
+class RecyclerViewAdapterAllAttendance(
     present: ArrayList<Present>,
     aClasses: ArrayList<Lecture>
-) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewAdapterAllAttendance.ViewHolder>() {
 
     private var present: ArrayList<Present> = present
     private var lecture: ArrayList<Lecture> = aClasses
 
-    private val TAG = "RecyclerViewAdapter"
+    private val TAG = "RecyclerViewAdapterAllAttendance"
 
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_my_attendance, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_s_all_attendance, parent, false)
         return ViewHolder(view)
     }
 

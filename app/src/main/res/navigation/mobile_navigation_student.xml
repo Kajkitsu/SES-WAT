@@ -7,15 +7,15 @@
 
     <fragment
         android:id="@+id/navigation_add_present"
-        android:name="pl.edu.wat.seswat.ui.addAttendance.AddAttendanceFragment"
+        android:name="pl.edu.wat.seswat.ui.student.addAttendance.SAddAttendanceFragment"
         android:label="Dodaj obecność"
-        tools:layout="@layout/fragment_add_attendance" />
+        tools:layout="@layout/fragment_s_add_attendance" />
 
     <fragment
-        android:id="@+id/navigation_present_list"
-        android:name="pl.edu.wat.seswat.ui.myAttendanceList.TeacherAttendanceListFragment"
+        android:id="@+id/navigation_all_attendance"
+        android:name="pl.edu.wat.seswat.ui.student.allAttendancesList.SAllAttendanceListFragment"
         android:label="Lista obecnosci"
-        tools:layout="@layout/fragment_my_attendance_list" />
+        tools:layout="@layout/fragment_s_all_attendance_list" />
 
     <fragment
         android:id="@+id/navigation_settings"

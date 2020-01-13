@@ -1,4 +1,4 @@
-package pl.edu.wat.seswat.ui.addAttendance
+package pl.edu.wat.seswat.ui.student.addAttendance
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,19 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import pl.edu.wat.seswat.R
+import pl.edu.wat.seswat.ui.teacher.selectAttendanceList.TSelectAttendanceListViewModel
 
-class AddAttendanceFragment : Fragment() {
+class SAddAttendanceFragment : Fragment() {
 
-    private lateinit var addPresentViewModelAttendance: SelectAttendanceListViewModel
+    private lateinit var tSelectAttendanceListViewModel: SAddAttendanceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        addPresentViewModelAttendance =
-            ViewModelProviders.of(this).get(SelectAttendanceListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_add_attendance, container, false)
+        tSelectAttendanceListViewModel =
+            ViewModelProviders.of(this).get(SAddAttendanceViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_s_add_attendance, container, false)
 //        val textView: TextView = root.findViewById(R.id.text_home)
 //        addPresentViewModelAttendance.text.observe(this, Observer {
 //            textView.text = it

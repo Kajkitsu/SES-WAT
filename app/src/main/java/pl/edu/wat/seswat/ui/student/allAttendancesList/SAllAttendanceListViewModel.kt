@@ -1,10 +1,10 @@
-package pl.edu.wat.seswat.ui.myAttendanceList
+package pl.edu.wat.seswat.ui.student.allAttendancesList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class MyAttendanceListViewModel : ViewModel() {
+class SAllAttendanceListViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
