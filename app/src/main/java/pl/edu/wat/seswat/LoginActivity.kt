@@ -57,9 +57,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
 
     public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = mAuth!!.currentUser
-        updateUI(currentUser)
+        updateUI(mAuth!!.currentUser)
     }
 
     private fun createAccount(email: String, password: String) {
@@ -172,7 +170,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
     private fun signOut() {
         mAuth?.signOut()
         updateUI(null)
-        userData=null
+        userData?.value =null
     }
 
     private fun sendEmailVerification() {
@@ -281,7 +279,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
         } else if (i == R.id.verifyEmailButton) {
             sendEmailVerification()
         } else if (i == R.id.startAppButton) {
-            if (userData != null){
+            if (userData?.value != null){
                 Log.d(TAG, "user data"+userData)
                 if (userData!!.value?.isTeacher!!){
                     val myIntent = Intent(this, TeacherMenuActivity::class.java)

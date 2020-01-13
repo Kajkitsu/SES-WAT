@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_present_list"
-        android:name="pl.edu.wat.seswat.ui.myAttendanceList.MyAttendanceListFragment"
+        android:name="pl.edu.wat.seswat.ui.myAttendanceList.TeacherAttendanceListFragment"
         android:label="Lista obecnosci"
         tools:layout="@layout/fragment_my_attendance_list" />
 

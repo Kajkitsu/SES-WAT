@@ -8,7 +8,7 @@ data class User(
     var name: String? = null,
     var surname: String? = null,
     @field:JvmField
-    var isTeacher: Boolean? = null,
+    var isTeacher: Boolean? = false,
     var email: String? = null
 )
 

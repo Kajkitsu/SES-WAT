@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_present_layout"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp">
+
+
+    <TextView
+        android:id="@+id/text_view_subject_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Imie i nazwisko:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Czas dodania: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/is_confirmed_image_view"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_alarm_off_black_24dp"
+        tools:layout_editor_absoluteY="5dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
