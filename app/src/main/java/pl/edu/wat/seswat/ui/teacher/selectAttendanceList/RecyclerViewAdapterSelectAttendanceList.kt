@@ -20,11 +20,12 @@ import java.text.SimpleDateFormat
 
 
 class RecyclerViewAdapterSelectAttendanceList(
-    attendanceList: MutableLiveData<ArrayList<AttendanceList>>,
+    attendanceListArrayListLD: MutableLiveData<ArrayList<AttendanceList>>,
+    var selectedAttendanceList: MutableLiveData<AttendanceList>,
     context: Context?
 ) : RecyclerView.Adapter<RecyclerViewAdapterSelectAttendanceList.ViewHolder>() {
 
-    private var attendanceList: ArrayList<AttendanceList>? = attendanceList.value
+    private var attendanceListArrayList: ArrayList<AttendanceList>? = attendanceListArrayListLD.value
     private var mContext: Context? = context
     private var checkedPosition = -1
 
@@ -43,29 +44,37 @@ class RecyclerViewAdapterSelectAttendanceList(
         Log.d(TAG, "onBindViewHolder: called.")
 
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-        val date = attendanceList?.get(position)?.startDate?.toDate()
+        val date = attendanceListArrayList?.get(position)?.startDate?.toDate()
 
         holder.dateTextView.text = "Data: "+ dateFormat.format(date).toString()
-        holder.subjectNameTextView.text = "Przedmiot: "+ (attendanceList?.get(position)?.subjectShortName)
+        holder.subjectNameTextView.text = "Przedmiot: "+ (attendanceListArrayList?.get(position)?.subjectShortName)
 
-        if(attendanceList?.get(position)?.isOpen!!){
-            holder.studentsNumber.text = "Liczba studentow: "+ attendanceList?.get(position)?.attendance?.size.toString()+"os. - otwarta"
+        if(attendanceListArrayList?.get(position)?.isOpen!!){
+            holder.studentsNumber.text = "Liczba studentow: "+ attendanceListArrayList?.get(position)?.attendance?.size.toString()+"os. - otwarta"
         }
         else{
-            holder.studentsNumber.text = "Liczba studentow: "+ attendanceList?.get(position)?.attendance?.size.toString()+"os. - zamknieta"
+            holder.studentsNumber.text = "Liczba studentow: "+ attendanceListArrayList?.get(position)?.attendance?.size.toString()+"os. - zamknieta"
         }
 
-        if (checkedPosition == -1)
-        {
+        if(attendanceListArrayList?.get(position)==selectedAttendanceList.value){
+            holder.isSelectedImageView.visibility = View.VISIBLE
+            checkedPosition=position
+        }
+        else{
             holder.isSelectedImageView.visibility = View.GONE
         }
-        else {
-            if (checkedPosition == position) {
-                holder.isSelectedImageView.visibility = View.VISIBLE
-            } else {
-                holder.isSelectedImageView.visibility = View.GONE
-            }
-        }
+
+//        if (checkedPosition == -1)
+//        {
+//
+//        }
+//        else {
+//            if (checkedPosition == position) {
+//
+//            } else {
+//                holder.isSelectedImageView.visibility = View.GONE
+//            }
+//        }
 
 
 
@@ -73,16 +82,14 @@ class RecyclerViewAdapterSelectAttendanceList(
             override fun onClick(view: View) {
 
                 if (checkedPosition != position) {
+                    val oldPosition = checkedPosition
                     checkedPosition = position
-                    Log.d(TAG, "onClick: clicked on: " + (attendanceList?.get(position)?.subjectShortName)+"  cp:"+checkedPosition)
-
-//                    Toast.makeText(mContext, attendanceList!!.get(position).subjectShortName, Toast.LENGTH_SHORT).show()
-                    notifyDataSetChanged()
-
+                    Log.d(TAG, "onClick: clicked on: " + (attendanceListArrayList?.get(position)?.subjectShortName)+"  cp:"+checkedPosition)
+//                  Toast.makeText(mContext, attendanceListArrayListLD!!.get(position).subjectShortName, Toast.LENGTH_SHORT).show()
+                    notifyItemChanged(checkedPosition)
+                    notifyItemChanged(oldPosition)
+                    selectedAttendanceList.value = attendanceListArrayList?.get(position)
                 }
-
-
-
 //                val intent = Intent(mContext, GalleryActivity::class.java)
 //                intent.putExtra("image_url", mDate.get(position))
 //                intent.putExtra("image_name", mSubjectName.get(position))
@@ -92,12 +99,12 @@ class RecyclerViewAdapterSelectAttendanceList(
     }
 
     override fun getItemCount(): Int {
-        if (attendanceList==null) return 0
-        return attendanceList?.size!!
+        if (attendanceListArrayList==null) return 0
+        return attendanceListArrayList?.size!!
     }
 
     fun setList(attendanceList: ArrayList<AttendanceList>) {
-        this.attendanceList = attendanceList
+        this.attendanceListArrayList = attendanceList
         notifyDataSetChanged()
     }
 
@@ -113,81 +120,3 @@ class RecyclerViewAdapterSelectAttendanceList(
     }
 
 }
-////
-//
-//class RecyclerViewAdapterSelecatList(private val context:Context, private var employees:MutableLiveData<AttendanceList>?):RecyclerView.Adapter(),
-//    Parcelable {
-// // if checkedPosition = -1, there is no default selection
-//    // if checkedPosition = 0, 1st item is selected by default
-//    private var checkedPosition = 0
-//
-// val selected:Employee?
-//get() = if (checkedPosition != -1) {
-//    employees!!.get(checkedPosition)
-//} else null
-//
-//    constructor(parcel: Parcel) : this(
-//        TODO("context"),
-//        TODO("employees")
-//    ) {
-//        checkedPosition = parcel.readInt()
-//    }
-//
-//
-//
-//override fun onCreateViewHolder(viewGroup:ViewGroup, i:Int):SingleViewHolder {
-//val view = LayoutInflater.from(context).inflate(R.layout.item_employee, viewGroup, false)
-//return SingleViewHolder(view)
-//}
-//
-//override fun onBindViewHolder(singleViewHolder:SingleViewHolder, position:Int) {
-//singleViewHolder.bind(employees!![position])
-//}
-//
-//override fun getItemCount():Int {
-//return employees!!.size
-//}
-//
-//internal inner class SingleViewHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
-//
-//private val textView:TextView
-//private val imageView:ImageView
-//
-//init{
-//textView = itemView.findViewById(R.id.textView)
-//imageView = itemView.findViewById(R.id.imageView)
-//}
-//
-// fun bind(employee:Employee) {
-//
-//}
-//textView.setText(employee.getName())
-//
-//itemView.setOnClickListener {
-//    imageView.visibility = View.VISIBLE
-//    if (checkedPosition != adapterPosition) {
-//        notifyItemChanged(checkedPosition)
-//        checkedPosition = adapterPosition
-//    }
-//}
-// }
-//}
-//
-//    override fun writeToParcel(parcel: Parcel, flags: Int) {
-//        parcel.writeInt(checkedPosition)
-//    }
-//
-//    override fun describeContents(): Int {
-//        return 0
-//    }
-//
-//    companion object CREATOR : Parcelable.Creator<RecyclerViewAdapterSelectAttendanceList> {
-//        override fun createFromParcel(parcel: Parcel): RecyclerViewAdapterSelectAttendanceList {
-//            return RecyclerViewAdapterSelectAttendanceList(parcel)
-//        }
-//
-//        override fun newArray(size: Int): Array<RecyclerViewAdapterSelectAttendanceList?> {
-//            return arrayOfNulls(size)
-//        }
-//    }
-//}

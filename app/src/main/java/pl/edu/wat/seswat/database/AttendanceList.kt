@@ -7,15 +7,15 @@ import kotlin.collections.ArrayList
 
 @IgnoreExtraProperties
 data class AttendanceList(
-    var code: String? = null,
+    var code: String = "brak",
     @field:JvmField
     var isOpen: Boolean = false,
-    var startDate: Timestamp? = Timestamp(Date(0)),
-    var stopDate: Timestamp? = Timestamp(Date(0)),
-    var subjectID: String? = null,
-    var subjectShortName: String? = null,
-    var teacherID: String? = null,
-    var type: String? = null,
-    var attendance: ArrayList<Attendance>? = null
+    var startDate: Timestamp = Timestamp(Date(0)),
+    var stopDate: Timestamp = Timestamp(Date(0)),
+    var subjectID: String = "brak",
+    var subjectShortName: String = "brak",
+    var teacherID: String = "brak",
+    var type: String = "brak",
+    var attendance: ArrayList<Attendance> = ArrayList()
 )
 

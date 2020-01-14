@@ -15,10 +15,10 @@ import com.google.firebase.auth.FirebaseAuth
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.database.Subject
+import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var settingsViewModel: SettingsViewModel
     private var TAG = "SettingsFragment"
 
     override fun onCreateView(
@@ -26,13 +26,9 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        settingsViewModel =
-            ViewModelProviders.of(this).get(SettingsViewModel::class.java)
+
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
         val textView: TextView = root.findViewById(R.id.text_notifications)
-        settingsViewModel.text.observe(this, Observer {
-            textView.text = it
-        })
 
 
         val buttonLogout: Button = root.findViewById(R.id.button_logout)
@@ -45,13 +41,16 @@ class SettingsFragment : Fragment() {
         var allSubjectList : MutableLiveData<ArrayList<Subject>> = MutableLiveData()
         val buttonTest0: Button = root.findViewById(R.id.button_test_0)
         buttonTest0.setOnClickListener {
+            var data = (this.activity as TeacherMenuActivity).data
+
             allSubjectList = FirestoreDataFunctions().getAllSubjectList()
             Log.d(TAG,"FirestoreDataFunctions().getAllSubjecList()")
 
         }
         val buttonTest1: Button = root.findViewById(R.id.button_test_1)
         buttonTest1.setOnClickListener {
-            Log.d(TAG,"allSubjectList: "+allSubjectList.value)
+            var data = (this.activity as TeacherMenuActivity).data
+            Log.d(TAG,"allSubjectList: "+data.allSubjects.value)
         }
 
 

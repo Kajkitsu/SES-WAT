@@ -19,7 +19,7 @@ import pl.edu.wat.seswat.database.Present
 
 class SAllAttendanceListFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var sAllAttendanceListViewModel: SAllAttendanceListViewModel
+
     private var TAG = "SAllAttendanceListFragment"
     lateinit var recycler: RecyclerView
     lateinit var adapterAllAttendance: RecyclerViewAdapterAllAttendance
@@ -35,8 +35,6 @@ class SAllAttendanceListFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sAllAttendanceListViewModel =
-            ViewModelProviders.of(this).get(SAllAttendanceListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_s_all_attendance_list, container, false)
 //        val textView: TextView = root.findViewById(R.id.text_dashboard)
 //        SAllAttendanceListViewModel.text.observe(this, Observer {

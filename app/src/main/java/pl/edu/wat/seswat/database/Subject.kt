@@ -4,8 +4,8 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class Subject(
-    var name: String? = null,
-    var shortName: String? = null,
-    var type: ArrayList<String>? = null
+    var name: String = "brak",
+    var shortName: String = "brak",
+    var type: ArrayList<String> = ArrayList()
 )
 
