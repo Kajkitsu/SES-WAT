@@ -9,7 +9,7 @@ import kotlin.collections.ArrayList
 data class AttendanceList(
     var code: String = "brak",
     @field:JvmField
-    var isOpen: Boolean = false,
+    var open: Boolean = false,
     var startDate: Timestamp = Timestamp(Date(0)),
     var stopDate: Timestamp = Timestamp(Date(0)),
     var subjectID: String = "brak",

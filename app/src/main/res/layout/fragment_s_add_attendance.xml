@@ -56,21 +56,6 @@ android:background="@color/grey_100">
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/titleTextAttendance"
-        style="@style/ThemeOverlay.MyTextDetail"
-        android:layout_height="37dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center_horizontal"
-        android:text="..."
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
-
     <Button
         android:id="@+id/ok_code_button"
         style="@style/Widget.AppCompat.Button.Colored"

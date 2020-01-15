@@ -1,20 +1,17 @@
 package pl.edu.wat.seswat.ui.teacher.attendanceListOptions
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.AttendanceList
 import java.text.SimpleDateFormat
-import java.util.ArrayList
 
 class RecyclerViewAdapterAttendanceListOptions(
     private var attendanceList: AttendanceList
@@ -33,7 +30,7 @@ class RecyclerViewAdapterAttendanceListOptions(
         var nameAndSurnameTextView: TextView = itemView.findViewById(R.id.text_view_name_and_surname)
         var dateTextView: TextView = itemView.findViewById(R.id.text_view_date)
         var isConfirmed: ImageView = itemView.findViewById(R.id.is_confirmed_image_view)
-        var parent: LinearLayout = itemView.findViewById(R.id.item_teacher_list)
+        var parent: ConstraintLayout = itemView.findViewById(R.id.item_list_options)
 
     }
 

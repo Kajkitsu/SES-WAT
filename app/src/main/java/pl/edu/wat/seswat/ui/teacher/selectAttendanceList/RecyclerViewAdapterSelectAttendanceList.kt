@@ -14,7 +14,7 @@ import java.util.ArrayList
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import pl.edu.wat.seswat.R
 import java.text.SimpleDateFormat
 
@@ -49,7 +49,7 @@ class RecyclerViewAdapterSelectAttendanceList(
         holder.dateTextView.text = "Data: "+ dateFormat.format(date).toString()
         holder.subjectNameTextView.text = "Przedmiot: "+ (attendanceListArrayList?.get(position)?.subjectShortName)
 
-        if(attendanceListArrayList?.get(position)?.isOpen!!){
+        if(attendanceListArrayList?.get(position)?.open!!){
             holder.studentsNumber.text = "Liczba studentow: "+ attendanceListArrayList?.get(position)?.attendance?.size.toString()+"os. - otwarta"
         }
         else{
@@ -58,10 +58,13 @@ class RecyclerViewAdapterSelectAttendanceList(
 
         if(attendanceListArrayList?.get(position)==selectedAttendanceList.value){
             holder.isSelectedImageView.visibility = View.VISIBLE
+            holder.view.visibility= View.VISIBLE
+            Log.d("DUPA",holder.view.background.toString()+holder.view.visibility.toString())
             checkedPosition=position
         }
         else{
             holder.isSelectedImageView.visibility = View.GONE
+            holder.view.visibility= View.GONE
         }
 
 //        if (checkedPosition == -1)
@@ -115,7 +118,8 @@ class RecyclerViewAdapterSelectAttendanceList(
         var dateTextView: TextView = itemView.findViewById(R.id.text_view_date)
         var studentsNumber: TextView = itemView.findViewById(R.id.text_view_number)
         var isSelectedImageView: ImageView = itemView.findViewById(R.id.is_confirmed_image_view)
-        var parent: LinearLayout = itemView.findViewById(R.id.item_teacher_list)
+        var view: View = itemView.findViewById(R.id.view_background)
+        var parent: ConstraintLayout = itemView.findViewById(R.id.item_teacher_list)
 
     }
 

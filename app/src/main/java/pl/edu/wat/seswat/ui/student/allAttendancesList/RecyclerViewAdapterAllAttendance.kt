@@ -10,23 +10,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.lifecycle.MutableLiveData
 import pl.edu.wat.seswat.R
-import pl.edu.wat.seswat.database.Lecture
-import pl.edu.wat.seswat.database.Present
-
-
-
+import pl.edu.wat.seswat.database.AttendanceList
+import pl.edu.wat.seswat.database.Subject
+import java.text.SimpleDateFormat
 
 
 class RecyclerViewAdapterAllAttendance(
-    present: ArrayList<Present>,
-    aClasses: ArrayList<Lecture>
+    var attendanceListOfList: ArrayList<AttendanceList>,
+    var subjectList: ArrayList<Subject>
 ) : RecyclerView.Adapter<RecyclerViewAdapterAllAttendance.ViewHolder>() {
 
-    private var present: ArrayList<Present> = present
-    private var lecture: ArrayList<Lecture> = aClasses
-
     private val TAG = "RecyclerViewAdapterAllAttendance"
+
+
+    fun setList(attendanceList: ArrayList<AttendanceList>, subjectList: ArrayList<Subject> ) {
+        this.attendanceListOfList = attendanceList
+        this.subjectList = subjectList
+        notifyDataSetChanged()
+    }
 
 
 
@@ -36,9 +39,9 @@ class RecyclerViewAdapterAllAttendance(
         return ViewHolder(view)
     }
 
-    fun getSubjectName(lectureID: String): String {
-        for (objectLectures in lecture) {
-            if(objectLectures.lectureID==lectureID) return objectLectures.subjectName.toString()
+    fun getSubjectName(subjectShortName: String): String {
+        for (subject in subjectList) {
+            if(subject.shortName==subjectShortName) return subject.name
         }
         return "brak przedmiotu";
 
@@ -48,9 +51,13 @@ class RecyclerViewAdapterAllAttendance(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: called.")
 
-        holder.dateTextView.text = "Data: "+present[position].timeOfAddToList
-        holder.subjectNameTextView.text = "Przedmiot: "+getSubjectName(present[position].lectureID!!)
-        if(present[position].confirmed!!) holder.isConfirmedImageView.setImageResource(R.drawable.ic_alarm_on_black_24dp)
+
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
+        val date = attendanceListOfList[position].attendance[0].timeOfAdd.toDate()
+
+        holder.dateTextView.text = "Data: "+dateFormat.format(date).toString()
+        holder.subjectNameTextView.text = "Przedmiot: "+getSubjectName(attendanceListOfList[position].subjectShortName)
+        if(attendanceListOfList[position].attendance[0].confirmed) holder.isConfirmedImageView.setImageResource(R.drawable.ic_alarm_on_black_24dp)
         else holder.isConfirmedImageView.setImageResource(R.drawable.ic_alarm_off_black_24dp)
 
 
@@ -69,7 +76,7 @@ class RecyclerViewAdapterAllAttendance(
     }
 
     override fun getItemCount(): Int {
-        return present.size
+        return attendanceListOfList.size
     }
 
 

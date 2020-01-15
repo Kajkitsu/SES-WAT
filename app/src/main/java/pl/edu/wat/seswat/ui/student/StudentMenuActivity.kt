@@ -3,16 +3,21 @@ package pl.edu.wat.seswat.ui.student
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.FirebaseAuth
 import pl.edu.wat.seswat.R
+import pl.edu.wat.seswat.database.FirestoreDataFunctions
+import pl.edu.wat.seswat.ui.teacher.TeacherData
 
 
 class StudentMenuActivity : AppCompatActivity(){
 
 
+    lateinit var data: StudentData
     val TAG = "StudentMenuActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +38,18 @@ class StudentMenuActivity : AppCompatActivity(){
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        initStudentData()
+
+    }
+
+
+
+    fun initStudentData(){
+        var mAuth = FirebaseAuth.getInstance()
+        data= StudentData(
+            FirestoreDataFunctions().getAllAttendanceListOfTeacher(mAuth.currentUser?.uid!!),
+            FirestoreDataFunctions().getAllSubjectList()
+        )
     }
 
 

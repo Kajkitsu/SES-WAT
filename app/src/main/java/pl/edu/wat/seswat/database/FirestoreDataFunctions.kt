@@ -33,12 +33,11 @@ class FirestoreDataFunctions(){
             }
         return myLDAttendanceList
         }
-    fun getMyAttendanceList2(userID: String): MutableLiveData<ArrayList<AttendanceList>> {
-        var myLDAttendanceList = MutableLiveData<ArrayList<AttendanceList>>()
+    fun getAllAttendanceListOfStudent(userID: String, myLDAttendanceList:MutableLiveData<ArrayList<AttendanceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendanceList>> {
         var myAttendanceList = ArrayList<AttendanceList>()
         val db = FirebaseFirestore.getInstance()
 
-        Log.d(TAG, "getMyAttendanceList2()")
+        Log.d(TAG, "getAllAttendanceListOfStudent()")
         db.collectionGroup("attendance").whereEqualTo("userID", userID).get()
             .addOnSuccessListener { queryDocumentSnapshots ->
                 for(queryDocument in queryDocumentSnapshots){
@@ -57,12 +56,11 @@ class FirestoreDataFunctions(){
 
 
 
-    fun getTeacherAttendanceList(teacherID: String): MutableLiveData<ArrayList<AttendanceList>> {
-        var myLDAttendanceList = MutableLiveData<ArrayList<AttendanceList>>()
+    fun getAllAttendanceListOfTeacher(teacherID: String,myLDAttendanceList: MutableLiveData<ArrayList<AttendanceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendanceList>> {
         var myAttendanceList = ArrayList<AttendanceList>()
         val db = FirebaseFirestore.getInstance()
 
-        Log.d(TAG, "getTeacherAttendanceList()")
+        Log.d(TAG, "getAllAttendanceListOfTeacher()")
         db.collection("list").whereEqualTo("teacherID",teacherID)
             .get().addOnSuccessListener {
                     documents ->
@@ -74,7 +72,7 @@ class FirestoreDataFunctions(){
                         studentsList ->
                         for (studentDoc in studentsList){
                             Log.d(TAG, "${studentDoc.id} => ${studentDoc.data}")
-                            tmpList.attendance!!.add(studentDoc.toObject(Attendance::class.java))
+                            tmpList.attendance.add(studentDoc.toObject(Attendance::class.java))
                         }
                         myAttendanceList.add(tmpList)
                         myLDAttendanceList.value =myAttendanceList
@@ -86,8 +84,7 @@ class FirestoreDataFunctions(){
         return myLDAttendanceList
     }
 
-    fun getAllSubjectList(): MutableLiveData<ArrayList<Subject>> {
-        var myLiveDataSubjectList = MutableLiveData<ArrayList<Subject>>()
+    fun getAllSubjectList(myLiveDataSubjectList: MutableLiveData<ArrayList<Subject>> = MutableLiveData()): MutableLiveData<ArrayList<Subject>> {
         var subjectList = ArrayList<Subject>()
         val db = FirebaseFirestore.getInstance()
 
@@ -142,9 +139,28 @@ class FirestoreDataFunctions(){
         return userDataLD
     }
 
+    fun getSelectedAttendanceList(code: String, attendanceListLD:MutableLiveData<AttendanceList> = MutableLiveData()): MutableLiveData<AttendanceList> {
+        val db = FirebaseFirestore.getInstance()
+
+        Log.d(TAG, "getSelectedAttendanceList()")
+        db.collection("list").document(code).get().addOnSuccessListener { document ->
+            Log.d(TAG, "${document.id} => ${document.data}")
+            var attendanceList = document.toObject(AttendanceList::class.java)
+            attendanceList!!.attendance = ArrayList<Attendance>()
+            document.reference.collection("attendance").get().addOnSuccessListener { studentsList ->
+                for (studentDoc in studentsList) {
+                    Log.d(TAG, "${studentDoc.id} => ${studentDoc.data}")
+                    attendanceList.attendance.add(studentDoc.toObject(Attendance::class.java))
+                }
+            }
+            attendanceListLD.value=attendanceList
+            Log.d(TAG, "${attendanceListLD.value}")
+
+        }
+        return attendanceListLD
 
 
-
+    }
 
 
 }

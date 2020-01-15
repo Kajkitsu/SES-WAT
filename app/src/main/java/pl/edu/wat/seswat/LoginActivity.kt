@@ -48,18 +48,45 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
         findViewById<View>(R.id.signOutButton).setOnClickListener(this)
         findViewById<View>(R.id.verifyEmailButton).setOnClickListener(this)
         findViewById<View>(R.id.startAppButton).setOnClickListener(this)
-
-
         mAuth = FirebaseAuth.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
 
-        userData = FirestoreDataFunctions().getUserData(mAuth!!.currentUser?.uid)
+
     }
 
 
     public override fun onStart() {
         super.onStart()
-        updateUI(mAuth!!.currentUser)
+        userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
+        updateUI(mAuth?.currentUser)
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        if (user != null) {
+            mStatusTextView?.text = getString(
+                R.string.emailpassword_status_fmt,
+                user.email, user.isEmailVerified
+            )
+            mDetailTextView?.text = getString(R.string.firebase_status_fmt, user.uid)
+
+
+            findViewById<View>(R.id.emailPasswordButtons).visibility = View.GONE
+            findViewById<View>(R.id.emailPasswordFields).visibility = View.GONE
+            findViewById<View>(R.id.startAppButton).visibility = View.VISIBLE
+            findViewById<View>(R.id.signedInButtons).visibility = View.VISIBLE
+            findViewById<View>(R.id.verifyEmailButton).isEnabled = !user.isEmailVerified
+            findViewById<View>(R.id.startAppButton).isEnabled = user.isEmailVerified
+
+        } else {
+            mStatusTextView?.setText(R.string.signed_out)
+            mDetailTextView?.text = null
+
+            findViewById<View>(R.id.emailPasswordButtons).visibility = View.VISIBLE
+            findViewById<View>(R.id.emailPasswordFields).visibility = View.VISIBLE
+            findViewById<View>(R.id.startAppButton).visibility = View.GONE
+            findViewById<View>(R.id.signedInButtons).visibility = View.GONE
+            findViewById<View>(R.id.startAppButton).isEnabled = false
+        }
     }
 
     private fun createAccount(email: String, password: String) {
@@ -77,8 +104,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     addUserToFirebase()
-                    val user = mAuth!!.currentUser
-                    updateUI(user)
+                    updateUI(mAuth?.currentUser)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(
@@ -96,40 +122,25 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
         // [END create_user_with_email]
     }
 
-    private fun addUserToListFunction(): Task<String>? {
-        // Create the arguments to the callable function.
 
-        return mFunctions
-            ?.getHttpsCallable("addUserToListFunction")
-            ?.call()
-            ?.continueWith { task ->
-                // This continuation runs on either success or failure, but if the task
-                // has failed then getResult() will throw an Exception which will be
-                // propagated down.
-                task.result?.data.toString()
-            }
-    }
-
-    //TODO
     fun addUserToFirebase() {
-        return
-//        addUserToListFunction()!!.addOnCompleteListener(this
-//        ) { task ->
-//            if (task.isSuccessful) {
-//                // Sign in success, update UI with the signed-in user's information
-//                Log.d(TAG, "addUserToListFunction:success")
-//                val user = mAuth?.currentUser
-//                updateUI(user)
-//            } else {
-//                // If sign in fails, display a message to the user.
-//                Log.w(
-//                    TAG,
-//                    "addUserToListFunction:failure",
-//                    task.exception
-//                )
-//                updateUI(null)
-//            }
-//        }
+        mFunctions
+            ?.getHttpsCallable("addUserToFirebase")
+            ?.call()?.addOnCompleteListener(this
+            ) { task ->
+                //TODO task.result
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "addUserToListFunction:success")
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(
+                        TAG,
+                        "addUserToListFunction:failure",
+                        task.exception
+                    )
+                }
+            }
     }
 
     private fun signIn(email: String, password: String) {
@@ -145,9 +156,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
-                    val user = mAuth?.currentUser
-                    userData = FirestoreDataFunctions().getUserData(mAuth!!.currentUser?.uid)
-                    updateUI(user)
+
+                    userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
+                    updateUI(mAuth?.currentUser)
 
                 } else {
                     // If sign in fails, display a message to the user.
@@ -242,33 +253,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
     }
 
 
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) {
-            mStatusTextView?.text = getString(
-                R.string.emailpassword_status_fmt,
-                user.email, user.isEmailVerified
-            )
-            mDetailTextView?.text = getString(R.string.firebase_status_fmt, user.uid)
 
-
-            findViewById<View>(R.id.emailPasswordButtons).visibility = View.GONE
-            findViewById<View>(R.id.emailPasswordFields).visibility = View.GONE
-            findViewById<View>(R.id.startAppButton).visibility = View.VISIBLE
-            findViewById<View>(R.id.signedInButtons).visibility = View.VISIBLE
-            findViewById<View>(R.id.verifyEmailButton).isEnabled = !user.isEmailVerified
-            findViewById<View>(R.id.startAppButton).isEnabled = user.isEmailVerified
-
-        } else {
-            mStatusTextView?.setText(R.string.signed_out)
-            mDetailTextView?.text = null
-
-            findViewById<View>(R.id.emailPasswordButtons).visibility = View.VISIBLE
-            findViewById<View>(R.id.emailPasswordFields).visibility = View.VISIBLE
-            findViewById<View>(R.id.startAppButton).visibility = View.GONE
-            findViewById<View>(R.id.signedInButtons).visibility = View.GONE
-            findViewById<View>(R.id.startAppButton).isEnabled = false
-        }
-    }
 
     override fun onClick(v: View) {
         val i = v.id
@@ -281,16 +266,19 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
         } else if (i == R.id.verifyEmailButton) {
             sendEmailVerification()
         } else if (i == R.id.startAppButton) {
-            if (userData?.value != null){
+            if (userData?.value != null && mAuth?.currentUser?.isEmailVerified!!){
                 Log.d(TAG, "user data"+userData)
+                findViewById<Button>(R.id.startAppButton).isEnabled=false
                 if (userData!!.value?.isTeacher!!){
                     val myIntent = Intent(this, TeacherMenuActivity::class.java)
                     startActivity(myIntent)
                 }
                 else{
+
                     val myIntent = Intent(this, StudentMenuActivity::class.java)
                     startActivity(myIntent)
                 }
+                findViewById<Button>(R.id.startAppButton).isEnabled=true
             }
 
 
