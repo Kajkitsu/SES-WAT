@@ -5,7 +5,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import java.util.*
 
 @IgnoreExtraProperties
-data class Attendance(
+data class Attendence(
     @field:JvmField
     var confirmed: Boolean = false,
     var timeOfAdd: Timestamp = Timestamp(Date(0)),

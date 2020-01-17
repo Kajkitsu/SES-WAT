@@ -10,23 +10,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.lifecycle.MutableLiveData
 import pl.edu.wat.seswat.R
-import pl.edu.wat.seswat.database.AttendanceList
+import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.database.Subject
 import java.text.SimpleDateFormat
 
 
 class RecyclerViewAdapterAllAttendance(
-    var attendanceListOfList: ArrayList<AttendanceList>,
+    var attendenceListOfList: ArrayList<AttendenceList>,
     var subjectList: ArrayList<Subject>
 ) : RecyclerView.Adapter<RecyclerViewAdapterAllAttendance.ViewHolder>() {
 
     private val TAG = "RecyclerViewAdapterAllAttendance"
 
 
-    fun setList(attendanceList: ArrayList<AttendanceList>, subjectList: ArrayList<Subject> ) {
-        this.attendanceListOfList = attendanceList
+    fun setList(attendenceList: ArrayList<AttendenceList>, subjectList: ArrayList<Subject> ) {
+        this.attendenceListOfList = attendenceList
         this.subjectList = subjectList
         notifyDataSetChanged()
     }
@@ -53,11 +52,11 @@ class RecyclerViewAdapterAllAttendance(
 
 
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
-        val date = attendanceListOfList[position].attendance[0].timeOfAdd.toDate()
+        val date = attendenceListOfList[position].attendence[0].timeOfAdd.toDate()
 
         holder.dateTextView.text = "Data: "+dateFormat.format(date).toString()
-        holder.subjectNameTextView.text = "Przedmiot: "+getSubjectName(attendanceListOfList[position].subjectShortName)
-        if(attendanceListOfList[position].attendance[0].confirmed) holder.isConfirmedImageView.setImageResource(R.drawable.ic_alarm_on_black_24dp)
+        holder.subjectNameTextView.text = "Przedmiot: "+getSubjectName(attendenceListOfList[position].subjectShortName)
+        if(attendenceListOfList[position].attendence[0].confirmed) holder.isConfirmedImageView.setImageResource(R.drawable.ic_alarm_on_black_24dp)
         else holder.isConfirmedImageView.setImageResource(R.drawable.ic_alarm_off_black_24dp)
 
 
@@ -76,7 +75,7 @@ class RecyclerViewAdapterAllAttendance(
     }
 
     override fun getItemCount(): Int {
-        return attendanceListOfList.size
+        return attendenceListOfList.size
     }
 
 

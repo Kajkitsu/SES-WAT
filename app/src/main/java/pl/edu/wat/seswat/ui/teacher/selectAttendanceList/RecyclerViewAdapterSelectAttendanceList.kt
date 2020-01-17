@@ -9,23 +9,24 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import pl.edu.wat.seswat.database.AttendanceList
-import java.util.ArrayList
+import pl.edu.wat.seswat.database.AttendenceList
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.Timestamp
 import pl.edu.wat.seswat.R
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RecyclerViewAdapterSelectAttendanceList(
-    attendanceListArrayListLD: MutableLiveData<ArrayList<AttendanceList>>,
-    var selectedAttendanceList: MutableLiveData<AttendanceList>,
+    attendenceListArrayListLD: MutableLiveData<ArrayList<AttendenceList>>,
+    var selectedAttendenceList: MutableLiveData<AttendenceList>,
     context: Context?
 ) : RecyclerView.Adapter<RecyclerViewAdapterSelectAttendanceList.ViewHolder>() {
 
-    private var attendanceListArrayList: ArrayList<AttendanceList>? = attendanceListArrayListLD.value
+    private var attendenceListArrayList: ArrayList<AttendenceList>? = attendenceListArrayListLD.value
     private var mContext: Context? = context
     private var checkedPosition = -1
 
@@ -43,20 +44,28 @@ class RecyclerViewAdapterSelectAttendanceList(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: called.")
 
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-        val date = attendanceListArrayList?.get(position)?.startDate?.toDate()
-
-        holder.dateTextView.text = "Data: "+ dateFormat.format(date).toString()
-        holder.subjectNameTextView.text = "Przedmiot: "+ (attendanceListArrayList?.get(position)?.subjectShortName)
-
-        if(attendanceListArrayList?.get(position)?.open!!){
-            holder.studentsNumber.text = "Liczba studentow: "+ attendanceListArrayList?.get(position)?.attendance?.size.toString()+"os. - otwarta"
+        if(attendenceListArrayList?.get(position)?.startDate != Timestamp(Date(0))){
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
+            val date = attendenceListArrayList?.get(position)?.startDate!!.toDate()
+            holder.dateTextView.text = "Data: "+ dateFormat.format(date).toString()
         }
         else{
-            holder.studentsNumber.text = "Liczba studentow: "+ attendanceListArrayList?.get(position)?.attendance?.size.toString()+"os. - zamknieta"
+            holder.dateTextView.text = "Lista jeszcze nie była otwarta"
         }
 
-        if(attendanceListArrayList?.get(position)==selectedAttendanceList.value){
+
+
+
+        holder.subjectNameTextView.text = "Przedmiot: "+ (attendenceListArrayList?.get(position)?.subjectShortName)
+
+        if(attendenceListArrayList?.get(position)?.open!!){
+            holder.studentsNumber.text = "Liczba studentow: "+ attendenceListArrayList?.get(position)?.attendence?.size.toString()+"os. - otwarta"
+        }
+        else{
+            holder.studentsNumber.text = "Liczba studentow: "+ attendenceListArrayList?.get(position)?.attendence?.size.toString()+"os. - zamknieta"
+        }
+
+        if(attendenceListArrayList?.get(position)==selectedAttendenceList.value){
             holder.isSelectedImageView.visibility = View.VISIBLE
             holder.view.visibility= View.VISIBLE
             Log.d("DUPA",holder.view.background.toString()+holder.view.visibility.toString())
@@ -87,11 +96,11 @@ class RecyclerViewAdapterSelectAttendanceList(
                 if (checkedPosition != position) {
                     val oldPosition = checkedPosition
                     checkedPosition = position
-                    Log.d(TAG, "onClick: clicked on: " + (attendanceListArrayList?.get(position)?.subjectShortName)+"  cp:"+checkedPosition)
-//                  Toast.makeText(mContext, attendanceListArrayListLD!!.get(position).subjectShortName, Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "onClick: clicked on: " + (attendenceListArrayList?.get(position)?.subjectShortName)+"  cp:"+checkedPosition)
+//                  Toast.makeText(mContext, attendenceListArrayListLD!!.get(position).subjectShortName, Toast.LENGTH_SHORT).show()
                     notifyItemChanged(checkedPosition)
                     notifyItemChanged(oldPosition)
-                    selectedAttendanceList.value = attendanceListArrayList?.get(position)
+                    selectedAttendenceList.value = attendenceListArrayList?.get(position)
                 }
 //                val intent = Intent(mContext, GalleryActivity::class.java)
 //                intent.putExtra("image_url", mDate.get(position))
@@ -102,12 +111,12 @@ class RecyclerViewAdapterSelectAttendanceList(
     }
 
     override fun getItemCount(): Int {
-        if (attendanceListArrayList==null) return 0
-        return attendanceListArrayList?.size!!
+        if (attendenceListArrayList==null) return 0
+        return attendenceListArrayList?.size!!
     }
 
-    fun setList(attendanceList: ArrayList<AttendanceList>) {
-        this.attendanceListArrayList = attendanceList
+    fun setList(attendenceList: ArrayList<AttendenceList>) {
+        this.attendenceListArrayList = attendenceList
         notifyDataSetChanged()
     }
 

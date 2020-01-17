@@ -9,12 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Timestamp
 import pl.edu.wat.seswat.R
-import pl.edu.wat.seswat.database.AttendanceList
+import pl.edu.wat.seswat.database.AttendenceList
 import java.text.SimpleDateFormat
+import java.util.*
 
 class RecyclerViewAdapterAttendanceListOptions(
-    private var attendanceList: AttendanceList
+    private var attendenceList: AttendenceList
 ) : RecyclerView.Adapter<RecyclerViewAdapterAttendanceListOptions.ViewHolder>() {
 
     private val TAG = "AdapterAttendanceListOptions"
@@ -39,16 +41,23 @@ class RecyclerViewAdapterAttendanceListOptions(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: called.")
 
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
-        val date = attendanceList.attendance.get(position).timeOfAdd.toDate()
-
-        holder.dateTextView.text = "Data: "+ dateFormat.format(date).toString()
-
-        holder.nameAndSurnameTextView.text = "Imie i Nazwisko: "+ (attendanceList.attendance.get(position).userID)
 
 
+        if(attendenceList.attendence.get(position).timeOfAdd != Timestamp(Date(0))){
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
+            val date = attendenceList.attendence.get(position).timeOfAdd.toDate()
+            holder.dateTextView.text = "Data: "+ dateFormat.format(date).toString()
+        }
+        else{
+            holder.dateTextView.text = "Lista jeszcze nie była otwarta"
+        }
 
-        if(attendanceList.attendance.get(position).confirmed){
+
+        holder.nameAndSurnameTextView.text = "Imie i Nazwisko: "+ (attendenceList.attendence.get(position).userID)
+
+
+
+        if(attendenceList.attendence.get(position).confirmed){
             holder.isConfirmed.setImageResource(R.drawable.ic_alarm_on_black_24dp)
         }
         else{
@@ -60,7 +69,7 @@ class RecyclerViewAdapterAttendanceListOptions(
         holder.parent.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
                 Log.d(TAG, "onClick: clicked on: " + position)
-                attendanceList.attendance.get(position).confirmed=!attendanceList.attendance.get(position).confirmed
+                attendenceList.attendence.get(position).confirmed=!attendenceList.attendence.get(position).confirmed
                 //TODO 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!
                 notifyItemChanged(position)
 
@@ -73,11 +82,11 @@ class RecyclerViewAdapterAttendanceListOptions(
     }
 
     override fun getItemCount(): Int {
-        return attendanceList.attendance.size
+        return attendenceList.attendence.size
     }
 
-    fun setList(attendanceList: AttendanceList) {
-        this.attendanceList = attendanceList
+    fun setList(attendenceList: AttendenceList) {
+        this.attendenceList = attendenceList
         notifyDataSetChanged()
     }
 

@@ -2,15 +2,15 @@ package pl.edu.wat.seswat.ui.teacher
 
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.IgnoreExtraProperties
-import pl.edu.wat.seswat.database.AttendanceList
+import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.database.Subject
 import kotlin.collections.ArrayList
 
 @IgnoreExtraProperties
 class TeacherData(
-    var selectedAttendanceList: MutableLiveData<AttendanceList>,
-    var allAttendanceLists: MutableLiveData<ArrayList<AttendanceList>>,
+    var selectedAttendenceList: MutableLiveData<AttendenceList>,
+    var allAttendenceLists: MutableLiveData<ArrayList<AttendenceList>>,
     var allSubjects: MutableLiveData<ArrayList<Subject>>
 ){
     fun updateAllSubjects(){
@@ -18,17 +18,17 @@ class TeacherData(
     }
 
     fun updateSelectedAttendanceList(){
-        selectedAttendanceList.value?.code?.let {
-            FirestoreDataFunctions().getSelectedAttendanceList(it,selectedAttendanceList)
+        selectedAttendenceList.value?.code?.let {
+            FirestoreDataFunctions().getSelectedAttendanceList(it,selectedAttendenceList)
         }
     }
 
     fun updateAllAttendanceLists(teacherID: String){
-        FirestoreDataFunctions().getAllAttendanceListOfTeacher(teacherID,allAttendanceLists)
+        FirestoreDataFunctions().getAllAttendanceListOfTeacher(teacherID,allAttendenceLists)
     }
 
     fun getConfiremdNOStudents(): Int {
-        var list= this.selectedAttendanceList.value?.attendance
+        var list= this.selectedAttendenceList.value?.attendence
         var NumberOfConfirmed=0
         if (list != null) {
             for(attendance in list){

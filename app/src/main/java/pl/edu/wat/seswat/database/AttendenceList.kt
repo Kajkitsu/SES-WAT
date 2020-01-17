@@ -6,7 +6,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @IgnoreExtraProperties
-data class AttendanceList(
+data class AttendenceList(
     var code: String = "brak",
     @field:JvmField
     var open: Boolean = false,
@@ -16,6 +16,6 @@ data class AttendanceList(
     var subjectShortName: String = "brak",
     var teacherID: String = "brak",
     var type: String = "brak",
-    var attendance: ArrayList<Attendance> = ArrayList()
+    var attendence: ArrayList<Attendence> = ArrayList()
 )
 

@@ -35,10 +35,12 @@ class StudentMenuActivity : AppCompatActivity(){
                 R.id.navigation_settings
             )
         )
+
+        initStudentData()
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        initStudentData()
+
 
     }
 
@@ -47,7 +49,7 @@ class StudentMenuActivity : AppCompatActivity(){
     fun initStudentData(){
         var mAuth = FirebaseAuth.getInstance()
         data= StudentData(
-            FirestoreDataFunctions().getAllAttendanceListOfTeacher(mAuth.currentUser?.uid!!),
+            FirestoreDataFunctions().getAllAttendanceListOfStudent(mAuth.currentUser?.uid!!),
             FirestoreDataFunctions().getAllSubjectList()
         )
     }

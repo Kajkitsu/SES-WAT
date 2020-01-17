@@ -8,7 +8,6 @@ import android.view.View
 import android.util.Log
 import android.widget.*
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.functions.FirebaseFunctions
@@ -50,14 +49,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
         findViewById<View>(R.id.startAppButton).setOnClickListener(this)
         mAuth = FirebaseAuth.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
-
+        userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
 
     }
 
 
     public override fun onStart() {
         super.onStart()
-        userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
+        //userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
         updateUI(mAuth?.currentUser)
     }
 
@@ -132,6 +131,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "addUserToListFunction:success")
+                    Log.d(TAG, task.getResult().toString())
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(

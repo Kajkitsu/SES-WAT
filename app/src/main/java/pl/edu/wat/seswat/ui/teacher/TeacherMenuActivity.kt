@@ -53,7 +53,7 @@ class TeacherMenuActivity : AppCompatActivity(){
 //        data.allSubjects.observe(this, Observer {
 //            Log.d("DUPA",it.toString())
 //        })
-//        data.allAttendanceLists.observe(this, Observer {
+//        data.allAttendenceLists.observe(this, Observer {
 //            Log.d("DUPA",it.toString())
 //        })
     }

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import pl.edu.wat.seswat.R
-import pl.edu.wat.seswat.database.AttendanceList
+import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.ui.teacher.TeacherData
 import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
 
@@ -32,11 +32,11 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         data = (this.activity as TeacherMenuActivity).data
         mAuth = FirebaseAuth.getInstance()
-        if(data.selectedAttendanceList.value!=null){
-            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(data.selectedAttendanceList.value!!)
+        if(data.selectedAttendenceList.value!=null){
+            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(data.selectedAttendenceList.value!!)
         }
         else{
-            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(AttendanceList())
+            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(AttendenceList())
         }
     }
 
@@ -56,7 +56,7 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         root.findViewById<Button>(R.id.refresh_attendance_list_options_button).setOnClickListener(this)
 
 
-        data.selectedAttendanceList.observe(this, Observer {
+        data.selectedAttendenceList.observe(this, Observer {
             if(it!=null){
                 textView.visibility=View.INVISIBLE
                 layout.visibility=View.VISIBLE
@@ -68,7 +68,7 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
 
                 root.findViewById<TextView>(R.id.textView_code).text="Kod: "+it.code
-                root.findViewById<TextView>(R.id.textView_no_students).text="Liczba studentów: "+it.attendance.size
+                root.findViewById<TextView>(R.id.textView_no_students).text="Liczba studentów: "+it.attendence.size
                 root.findViewById<TextView>(R.id.textView_no_confirmed_students).text="Liczba potwierdzonych studentów: "+data.getConfiremdNOStudents()
                 if(it.open){
                     root.findViewById<Switch>(R.id.switch_list).text="Otwarte"
