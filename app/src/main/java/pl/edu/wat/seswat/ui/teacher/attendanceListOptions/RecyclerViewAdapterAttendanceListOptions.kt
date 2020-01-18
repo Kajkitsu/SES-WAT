@@ -7,16 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
+import com.google.firebase.functions.FirebaseFunctions
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.AttendenceList
 import java.text.SimpleDateFormat
 import java.util.*
 
 class RecyclerViewAdapterAttendanceListOptions(
-    private var attendenceList: AttendenceList
+    private var attendenceList: AttendenceList,
+    private var mFunctions: FirebaseFunctions
 ) : RecyclerView.Adapter<RecyclerViewAdapterAttendanceListOptions.ViewHolder>() {
 
     private val TAG = "AdapterAttendanceListOptions"
@@ -35,7 +38,6 @@ class RecyclerViewAdapterAttendanceListOptions(
         var parent: ConstraintLayout = itemView.findViewById(R.id.item_list_options)
 
     }
-
 
     @SuppressLint("SetTextI18n", "LongLogTag")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -70,6 +72,13 @@ class RecyclerViewAdapterAttendanceListOptions(
             override fun onClick(view: View) {
                 Log.d(TAG, "onClick: clicked on: " + position)
                 attendenceList.attendence.get(position).confirmed=!attendenceList.attendence.get(position).confirmed
+                if(!attendenceList.attendence.get(position).confirmed){
+
+                }
+                else{
+
+                }
+
                 //TODO 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!
                 notifyItemChanged(position)
 

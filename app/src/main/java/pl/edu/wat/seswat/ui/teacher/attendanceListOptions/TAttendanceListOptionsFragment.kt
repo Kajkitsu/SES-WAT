@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.functions.FirebaseFunctions
+import kotlinx.android.synthetic.main.fragment_t_attendance_list_options.*
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.ui.teacher.TeacherData
@@ -23,20 +26,24 @@ import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
 class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
 
-    private var TAG = "TAttendanceListOptionsFragment"
+    private var TAG = "AttendanceListOptions"
     lateinit var data: TeacherData
     lateinit var recyclerViewAdapterAttendanceListOptions: RecyclerViewAdapterAttendanceListOptions
+    lateinit var refreshAttendanceListButton: Button
+    lateinit var openOrCloseSwitch: Switch
     lateinit var mAuth: FirebaseAuth
+    lateinit var mFunctions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         data = (this.activity as TeacherMenuActivity).data
         mAuth = FirebaseAuth.getInstance()
         if(data.selectedAttendenceList.value!=null){
-            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(data.selectedAttendenceList.value!!)
+            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(data.selectedAttendenceList.value!!,mFunctions)
+            Log.w(TAG,"dupa123")
         }
         else{
-            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(AttendenceList())
+            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(AttendenceList(), mFunctions)
         }
     }
 
@@ -53,10 +60,18 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         val textView: TextView = root.findViewById(R.id.textView_choose_attendance_list)
         val layout: ConstraintLayout = root.findViewById(R.id.layoutConstraint)
 
-        root.findViewById<Button>(R.id.refresh_attendance_list_options_button).setOnClickListener(this)
+        mFunctions = FirebaseFunctions.getInstance()
+
+
+        refreshAttendanceListButton = root.findViewById(R.id.refresh_attendance_list_options_button)
+        openOrCloseSwitch = root.findViewById(R.id.switch_open_or_close)
+
+        refreshAttendanceListButton.setOnClickListener(this)
+        openOrCloseSwitch.setOnClickListener(this)
 
 
         data.selectedAttendenceList.observe(this, Observer {
+            Log.w(TAG,"dupa"+it.toString())
             if(it!=null){
                 textView.visibility=View.INVISIBLE
                 layout.visibility=View.VISIBLE
@@ -71,12 +86,12 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
                 root.findViewById<TextView>(R.id.textView_no_students).text="Liczba studentów: "+it.attendence.size
                 root.findViewById<TextView>(R.id.textView_no_confirmed_students).text="Liczba potwierdzonych studentów: "+data.getConfiremdNOStudents()
                 if(it.open){
-                    root.findViewById<Switch>(R.id.switch_list).text="Otwarte"
-                    root.findViewById<Switch>(R.id.switch_list).setChecked(true)
+                    openOrCloseSwitch.text="Otwarte"
+                    openOrCloseSwitch.setChecked(true)
                 }
                 else{
-                    root.findViewById<Switch>(R.id.switch_list).text="Zamknięte"
-                    root.findViewById<Switch>(R.id.switch_list).setChecked(false)
+                    openOrCloseSwitch.text="Zamknięte"
+                    openOrCloseSwitch.setChecked(false)
                 }
 
             }
@@ -90,16 +105,63 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         return root
     }
 
+    fun updateData(){
+        data.updateSelectedAttendanceList()
+        mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
+        }
+        data.updateAllSubjects()
+    }
+
+    fun closeList(code: String){
+        mFunctions.getHttpsCallable("closeList").call(
+            hashMapOf(
+                "code" to code
+            )
+
+        ).addOnSuccessListener {
+            Log.d(TAG, it.data.toString())
+            Toast.makeText(this.context,"Sukces", Toast.LENGTH_LONG).show()
+            updateData()
+            openOrCloseSwitch.isEnabled=true
+        }.addOnFailureListener {
+            Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()
+            Log.w(TAG,"addUserToListFunction:failure",it)
+        }
+    }
+
+    fun openList(code: String){
+        mFunctions.getHttpsCallable("openList").call(
+            hashMapOf(
+                "code" to code
+            )
+
+        ).addOnSuccessListener {
+            Log.d(TAG, it.data.toString())
+            Toast.makeText(this.context,"Sukces", Toast.LENGTH_LONG).show()
+            updateData()
+            openOrCloseSwitch.isEnabled=true
+        }.addOnFailureListener {
+            Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()
+            Log.w(TAG,"addUserToListFunction:failure",it)
+        }
+    }
+
+
+
     override fun onClick(v: View) {
         val i = v.id
         if (i == R.id.refresh_attendance_list_options_button) {
-            Log.d("DUPA","CYCKI")
-            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
+            updateData()
+        }
+        else if(i == R.id.switch_open_or_close &&  data.selectedAttendenceList.value!=null){
+            openOrCloseSwitch.isEnabled=false
+            Log.d(TAG,"DUPA")
+            if(switch_open_or_close.text=="Otwarte"){
+                closeList(data.selectedAttendenceList.value!!.code)
             }
-            data.updateSelectedAttendanceList()
-            data.updateAllSubjects()
-
-
+            else{
+                openList(data.selectedAttendenceList.value!!.code)
+            }
         }
     }
 }

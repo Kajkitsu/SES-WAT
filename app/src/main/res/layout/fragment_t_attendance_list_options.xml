@@ -80,7 +80,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Switch
-            android:id="@+id/switch_list"
+            android:id="@+id/switch_open_or_close"
             android:layout_width="123dp"
             android:layout_height="43dp"
             android:layout_marginTop="16dp"

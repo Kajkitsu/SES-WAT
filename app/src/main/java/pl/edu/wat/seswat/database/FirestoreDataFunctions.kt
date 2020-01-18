@@ -33,6 +33,7 @@ class FirestoreDataFunctions(){
             }
         return myLDAttendanceList
         }
+
     fun getAllAttendanceListOfStudent(userID: String, myLDAttendenceList:MutableLiveData<ArrayList<AttendenceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendenceList>> {
         var myAttendanceList = ArrayList<AttendenceList>()
         val db = FirebaseFirestore.getInstance()
@@ -158,17 +159,22 @@ class FirestoreDataFunctions(){
         db.collection("list").document(code).get().addOnSuccessListener { document ->
             Log.d(TAG, "${document.id} => ${document.data}")
             var attendanceList = document.toObject(AttendenceList::class.java)
-            attendanceList!!.attendence = ArrayList<Attendence>()
             document.reference.collection("attendence").get().addOnSuccessListener { studentsList ->
+                Log.d(TAG, "selectedAttendanceList data:"+studentsList.isEmpty)
+                attendanceList?.attendence = ArrayList<Attendence>()
                 for (studentDoc in studentsList) {
                     Log.d(TAG, "${studentDoc.id} => ${studentDoc.data}")
-                    attendanceList.attendence.add(studentDoc.toObject(Attendence::class.java))
+                    attendanceList?.attendence?.add(studentDoc.toObject(Attendence::class.java))
+                    Log.d(TAG, "selectedAttendance "+attendanceList?.attendence.toString())
+                    attendenceListLD.value=attendanceList
                 }
             }
+//
             attendenceListLD.value=attendanceList
-            Log.d(TAG, "${attendenceListLD.value}")
+            Log.d(TAG, "selectedAttendance LD ${attendenceListLD.value}")
         }
         return attendenceListLD
     }
+
 
 }
