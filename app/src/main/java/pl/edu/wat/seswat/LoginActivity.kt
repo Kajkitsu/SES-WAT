@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
         findViewById<View>(R.id.startAppButton).setOnClickListener(this)
         mAuth = FirebaseAuth.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
-        userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
+        userData = FirestoreDataFunctions().getUserDataLD(mAuth?.currentUser?.uid)
 
     }
 
@@ -103,6 +103,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     addUserToFirebase()
+                    userData = FirestoreDataFunctions().getUserDataLD(mAuth?.currentUser?.uid)
                     updateUI(mAuth?.currentUser)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -156,8 +157,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener  {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
-
-                    userData = FirestoreDataFunctions().getUserData(mAuth?.currentUser?.uid)
+                    userData = FirestoreDataFunctions().getUserDataLD(mAuth?.currentUser?.uid)
                     updateUI(mAuth?.currentUser)
 
                 } else {

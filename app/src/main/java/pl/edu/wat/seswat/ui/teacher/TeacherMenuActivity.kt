@@ -46,10 +46,9 @@ class TeacherMenuActivity : AppCompatActivity(){
 
         var mAuth = FirebaseAuth.getInstance()
         data=TeacherData(
-            MutableLiveData(),
-            FirestoreDataFunctions().getAllAttendanceListOfTeacher(mAuth.currentUser?.uid!!),
+            FirestoreDataFunctions().getAllAttendanceListOfTeacherLD(mAuth.currentUser?.uid!!),
             FirestoreDataFunctions().getAllSubjectList(),
-            FirestoreDataFunctions().getAllStudents()
+            FirestoreDataFunctions().getAllStudentsLD()
         )
 //        data.allSubjects.observe(this, Observer {
 //            Log.d("DUPA",it.toString())

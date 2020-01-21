@@ -44,7 +44,7 @@ class TSelectAttendanceListFragment : Fragment(), View.OnClickListener {
         mFunctions = FirebaseFunctions.getInstance()
         data = (this.activity as TeacherMenuActivity).data
 
-        adapterAttendance = RecyclerViewAdapterSelectAttendanceList(data.allAttendenceLists,data.selectedAttendenceList,this.context)
+        adapterAttendance = RecyclerViewAdapterSelectAttendanceList(data)
 
 
         subjectList=ArrayList()
@@ -84,7 +84,6 @@ class TSelectAttendanceListFragment : Fragment(), View.OnClickListener {
 
 
         data.allSubjects.observe(this, Observer {
-            Log.d("DUPA","DUPA")
             subjectList=ArrayList()
             for (subject in it){
                 subjectList.add(subject.name)
@@ -113,9 +112,9 @@ class TSelectAttendanceListFragment : Fragment(), View.OnClickListener {
         ).addOnSuccessListener {
             Log.d(TAG, it.toString())
             Toast.makeText(this.context,"Sukces",Toast.LENGTH_LONG).show()
-            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
-            }
-            data.updateSelectedAttendanceList()
+//            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
+//            }
+//            data.updateSelectedAttendanceList()
         }.addOnFailureListener {
             Toast.makeText(this.context,"Failure",Toast.LENGTH_LONG).show()
             Log.w(TAG,"addUserToListFunction:failure",it)
@@ -125,10 +124,10 @@ class TSelectAttendanceListFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         val i = v.id
         if (i == R.id.refresh_select_attendance_list) {
-            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
-            }
-            data.updateSelectedAttendanceList()
-            data.updateAllSubjects()
+//            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
+//            }
+//            data.updateSelectedAttendanceList()
+//            data.updateAllSubjects()
         } else if (i == R.id.create_new_list){
             createNewList(spinner.selectedItem.toString())
         }

@@ -49,7 +49,7 @@ class StudentMenuActivity : AppCompatActivity(){
     fun initStudentData(){
         var mAuth = FirebaseAuth.getInstance()
         data= StudentData(
-            FirestoreDataFunctions().getAllAttendanceListOfStudent(mAuth.currentUser?.uid!!),
+            FirestoreDataFunctions().getAllAttendanceListOfStudentLD(mAuth.currentUser?.uid!!),
             FirestoreDataFunctions().getAllSubjectList()
         )
     }

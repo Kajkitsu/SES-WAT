@@ -74,8 +74,6 @@ class SAllAttendanceListFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         val i = v.id
         if (i == R.id.refresh_all_attendance_list_button) {
-            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it) }
-            data.updateAllSubjects()
         }
     }
 }

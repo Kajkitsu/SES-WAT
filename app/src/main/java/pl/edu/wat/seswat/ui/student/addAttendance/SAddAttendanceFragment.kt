@@ -57,8 +57,6 @@ class SAddAttendanceFragment : Fragment(), View.OnClickListener {
         ).addOnSuccessListener {
             Log.d(TAG, it.toString())
             Log.d(TAG,it.data.toString())
-            mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it) }
-            data.updateAllSubjects()
             Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
         }.addOnFailureListener {
             Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()

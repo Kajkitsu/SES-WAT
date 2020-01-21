@@ -11,14 +11,4 @@ import kotlin.collections.ArrayList
 class StudentData(
     var allAttendenceLists: MutableLiveData<ArrayList<AttendenceList>>,
     var allSubjects: MutableLiveData<ArrayList<Subject>>
-){
-    fun updateAllSubjects(){
-        FirestoreDataFunctions().getAllSubjectList(allSubjects)
-    }
-
-    fun updateAllAttendanceLists(studentID: String){
-        FirestoreDataFunctions().getAllAttendanceListOfStudent(studentID,allAttendenceLists)
-    }
-
-
-}
+)

@@ -36,6 +36,7 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
     lateinit var openOrCloseSwitch: Switch
     lateinit var mAuth: FirebaseAuth
     lateinit var mFunctions: FirebaseFunctions
+    lateinit var mRoot: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,10 +84,7 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_t_attendance_list_options, container, false)
-        val textView: TextView = root.findViewById(R.id.textView_choose_attendance_list)
-        val layout: ConstraintLayout = root.findViewById(R.id.layoutConstraint)
-
-
+        mRoot = root
 
         refreshAttendanceListButton = root.findViewById(R.id.refresh_attendance_list_options_button)
         openOrCloseSwitch = root.findViewById(R.id.switch_open_or_close)
@@ -95,46 +93,59 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         openOrCloseSwitch.setOnClickListener(this)
 
 
+        setAdapterAndRecyclerView(root)
+
         data.selectedAttendenceList.observe(this, Observer {
-            Log.w(TAG,"dupa"+it.toString())
-            if(it!=null){
-                textView.visibility=View.INVISIBLE
-                layout.visibility=View.VISIBLE
-
-                recyclerViewAdapterAttendanceListOptions.setList(it,data.allStudents.value)
-
-                root.findViewById<RecyclerView>(R.id.recycler_view_present_list).setAdapter(recyclerViewAdapterAttendanceListOptions)
-                root.findViewById<RecyclerView>(R.id.recycler_view_present_list).setLayoutManager(LinearLayoutManager(this.context))
-
-
-                root.findViewById<TextView>(R.id.textView_code).text="Kod: "+it.code
-                root.findViewById<TextView>(R.id.textView_no_students).text="Liczba studentów: "+it.attendence.size
-                root.findViewById<TextView>(R.id.textView_no_confirmed_students).text="Liczba potwierdzonych studentów: "+data.getConfiremdNOStudents()
-                if(it.open){
-                    openOrCloseSwitch.text="Otwarte"
-                    openOrCloseSwitch.setChecked(true)
-                }
-                else{
-                    openOrCloseSwitch.text="Zamknięte"
-                    openOrCloseSwitch.setChecked(false)
-                }
-
-            }
-            else{
-                layout.visibility=View.INVISIBLE
-                textView.visibility=View.VISIBLE
-
-            }
+            Log.d(TAG,"codeOfSelectAttendanceList.observe")
+            setAdapterAndRecyclerView(root)
+        })
+        data.allAttendenceLists.observe(this, Observer {
+            Log.d(TAG,"allAttendenceLists.observe")
+            data.updateAttendenceList()
         })
 
         return root
     }
 
-    fun updateData(){
-        data.updateSelectedAttendanceList()
-        mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it)
+    private fun setAdapterAndRecyclerView(
+        root: View
+    ) {
+        val textView: TextView = root.findViewById(R.id.textView_choose_attendance_list)
+        val layout: ConstraintLayout = root.findViewById(R.id.layoutConstraint)
+        var selectedAttendenceList = data.selectedAttendenceList.value
+        if(selectedAttendenceList!=null){
+            textView.visibility=View.INVISIBLE
+            layout.visibility=View.VISIBLE
+
+
+            recyclerViewAdapterAttendanceListOptions.setList(selectedAttendenceList,data.allStudents.value)
+            root.findViewById<RecyclerView>(R.id.recycler_view_present_list).setAdapter(recyclerViewAdapterAttendanceListOptions)
+            root.findViewById<RecyclerView>(R.id.recycler_view_present_list).setLayoutManager(LinearLayoutManager(this.context))
+
+
+            root.findViewById<TextView>(R.id.textView_code).text="Kod: "+selectedAttendenceList.code
+            root.findViewById<TextView>(R.id.textView_no_students).text="Liczba studentów: "+selectedAttendenceList.attendence.size
+            root.findViewById<TextView>(R.id.textView_no_confirmed_students).text="Liczba potwierdzonych studentów: "+data.getConfiremdNOStudents()
+            if(selectedAttendenceList.open){
+                openOrCloseSwitch.text="Otwarte"
+                openOrCloseSwitch.setChecked(true)
+            }
+            else{
+                openOrCloseSwitch.text="Zamknięte"
+                openOrCloseSwitch.setChecked(false)
+            }
+
         }
-        data.updateAllSubjects()
+        else{
+            layout.visibility=View.INVISIBLE
+            textView.visibility=View.VISIBLE
+
+        }
+
+    }
+
+    fun updateData(){
+      //  setAdapterAndRecyclerView(mRoot)
     }
 
 

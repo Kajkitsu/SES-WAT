@@ -16,18 +16,16 @@ import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.Timestamp
 import pl.edu.wat.seswat.R
+import pl.edu.wat.seswat.ui.teacher.TeacherData
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class RecyclerViewAdapterSelectAttendanceList(
-    attendenceListArrayListLD: MutableLiveData<ArrayList<AttendenceList>>,
-    var selectedAttendenceList: MutableLiveData<AttendenceList>,
-    context: Context?
+    var teacherData: TeacherData
 ) : RecyclerView.Adapter<RecyclerViewAdapterSelectAttendanceList.ViewHolder>() {
 
-    private var attendenceListArrayList: ArrayList<AttendenceList>? = attendenceListArrayListLD.value
-    private var mContext: Context? = context
+    private var attendenceListArrayList: ArrayList<AttendenceList>? = teacherData.allAttendenceLists.value
     private var checkedPosition = -1
 
     private val TAG = "AdapterSelectList"
@@ -65,7 +63,7 @@ class RecyclerViewAdapterSelectAttendanceList(
             holder.studentsNumber.text = "Liczba studentow: "+ attendenceListArrayList?.get(position)?.attendence?.size.toString()+"os. - zamknieta"
         }
 
-        if(attendenceListArrayList?.get(position)==selectedAttendenceList.value){
+        if(attendenceListArrayList?.get(position)==teacherData.selectedAttendenceList.value){
             holder.isSelectedImageView.visibility = View.VISIBLE
             holder.view.visibility= View.VISIBLE
             Log.d("DUPA",holder.view.background.toString()+holder.view.visibility.toString())
@@ -98,9 +96,9 @@ class RecyclerViewAdapterSelectAttendanceList(
                     checkedPosition = position
                     Log.d(TAG, "onClick: clicked on: " + (attendenceListArrayList?.get(position)?.subjectShortName)+"  cp:"+checkedPosition)
 //                  Toast.makeText(mContext, attendenceListArrayListLD!!.get(position).subjectShortName, Toast.LENGTH_SHORT).show()
+                    teacherData.selectedAttendenceList.value=attendenceListArrayList?.get(position)
                     notifyItemChanged(checkedPosition)
                     notifyItemChanged(oldPosition)
-                    selectedAttendenceList.value = attendenceListArrayList?.get(position)
                 }
 //                val intent = Intent(mContext, GalleryActivity::class.java)
 //                intent.putExtra("image_url", mDate.get(position))

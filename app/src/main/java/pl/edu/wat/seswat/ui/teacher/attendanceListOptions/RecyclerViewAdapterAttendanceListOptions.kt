@@ -112,7 +112,7 @@ class RecyclerViewAdapterAttendanceListOptions(
     }
 
     fun getNameAndSurname(userID: String) :String{
-        var returnValue = "brak "+(userID.substring(0,6))
+        var returnValue = "brak "+(userID.substring(0,4))
         if(studentsList!=null)
         for (user in studentsList!!){
             if(user.userID==userID){

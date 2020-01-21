@@ -6,31 +6,19 @@ import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.database.Subject
 import pl.edu.wat.seswat.database.User
+import pl.edu.wat.seswat.ui.teacher.selectAttendanceList.RecyclerViewAdapterSelectAttendanceList
 import kotlin.collections.ArrayList
 
 @IgnoreExtraProperties
 class TeacherData(
-    var selectedAttendenceList: MutableLiveData<AttendenceList>,
     var allAttendenceLists: MutableLiveData<ArrayList<AttendenceList>>,
     var allSubjects: MutableLiveData<ArrayList<Subject>>,
     var allStudents: MutableLiveData<ArrayList<User>>
 ){
+    var selectedAttendenceList: MutableLiveData<AttendenceList> = MutableLiveData()
 
-    fun updateStudentsList(){
-        FirestoreDataFunctions().getAllStudents(allStudents)
-    }
-    fun updateAllSubjects(){
-        FirestoreDataFunctions().getAllSubjectList(allSubjects)
-    }
-
-    fun updateSelectedAttendanceList(){
-        selectedAttendenceList.value?.code?.let {
-            FirestoreDataFunctions().getSelectedAttendanceList(it,selectedAttendenceList)
-        }
-    }
-
-    fun updateAllAttendanceLists(teacherID: String){
-        FirestoreDataFunctions().getAllAttendanceListOfTeacher(teacherID,allAttendenceLists)
+    init {
+        selectedAttendenceList.value=null
     }
 
     fun getConfiremdNOStudents(): Int {
@@ -42,6 +30,15 @@ class TeacherData(
             }
         }
         return NumberOfConfirmed
+    }
+
+    fun updateAttendenceList() {
+        if(allAttendenceLists.value!=null){
+            for (tmpAttedenceList in allAttendenceLists.value!!){
+                if(tmpAttedenceList.code == selectedAttendenceList.value?.code) selectedAttendenceList.value=tmpAttedenceList
+            }
+        }
+
     }
 
 
