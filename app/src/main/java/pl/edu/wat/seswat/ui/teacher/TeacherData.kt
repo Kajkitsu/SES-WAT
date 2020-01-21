@@ -5,14 +5,20 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.database.Subject
+import pl.edu.wat.seswat.database.User
 import kotlin.collections.ArrayList
 
 @IgnoreExtraProperties
 class TeacherData(
     var selectedAttendenceList: MutableLiveData<AttendenceList>,
     var allAttendenceLists: MutableLiveData<ArrayList<AttendenceList>>,
-    var allSubjects: MutableLiveData<ArrayList<Subject>>
+    var allSubjects: MutableLiveData<ArrayList<Subject>>,
+    var allStudents: MutableLiveData<ArrayList<User>>
 ){
+
+    fun updateStudentsList(){
+        FirestoreDataFunctions().getAllStudents(allStudents)
+    }
     fun updateAllSubjects(){
         FirestoreDataFunctions().getAllSubjectList(allSubjects)
     }

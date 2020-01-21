@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
 import pl.edu.wat.seswat.R
+import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.ui.student.StudentData
 import pl.edu.wat.seswat.ui.student.StudentMenuActivity
 
@@ -56,9 +57,9 @@ class SAddAttendanceFragment : Fragment(), View.OnClickListener {
         ).addOnSuccessListener {
             Log.d(TAG, it.toString())
             Log.d(TAG,it.data.toString())
-            Toast.makeText(this.context,"Sukces", Toast.LENGTH_LONG).show()
             mAuth.currentUser?.uid?.let { data.updateAllAttendanceLists(it) }
             data.updateAllSubjects()
+            Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
         }.addOnFailureListener {
             Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()
             Log.w(TAG,"addAttendance:failure",it)

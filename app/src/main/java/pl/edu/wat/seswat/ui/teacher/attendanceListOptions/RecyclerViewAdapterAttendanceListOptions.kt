@@ -10,19 +10,37 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.HttpsCallableResult
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.AttendenceList
+import pl.edu.wat.seswat.database.User
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RecyclerViewAdapterAttendanceListOptions(
-    private var attendenceList: AttendenceList,
-    private var mFunctions: FirebaseFunctions
+    nullableAttendenceList: AttendenceList?,
+    var studentsList: ArrayList<User>?
 ) : RecyclerView.Adapter<RecyclerViewAdapterAttendanceListOptions.ViewHolder>() {
 
+    private var attendenceList: AttendenceList
+    private lateinit var cancelConfirmationStudent: (code:String, userID: String) -> Task<HttpsCallableResult>
+    private lateinit var confirmStudent: (code:String, userID: String) -> Task<HttpsCallableResult>
     private val TAG = "AdapterAttendanceListOptions"
+
+    init {
+        if(nullableAttendenceList==null){
+            attendenceList=AttendenceList()
+        }
+        else{
+            attendenceList=nullableAttendenceList
+        }
+    }
+
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -55,11 +73,11 @@ class RecyclerViewAdapterAttendanceListOptions(
         }
 
 
-        holder.nameAndSurnameTextView.text = "Imie i Nazwisko: "+ (attendenceList.attendence.get(position).userID)
+        holder.nameAndSurnameTextView.text = "Imie i Nazwisko: "+ getNameAndSurname(attendenceList.attendence.get(position).userID)
 
 
 
-        if(attendenceList.attendence.get(position).confirmed){
+        if(attendenceList.attendence[position].confirmed){
             holder.isConfirmed.setImageResource(R.drawable.ic_alarm_on_black_24dp)
         }
         else{
@@ -71,21 +89,20 @@ class RecyclerViewAdapterAttendanceListOptions(
         holder.parent.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
                 Log.d(TAG, "onClick: clicked on: " + position)
-                attendenceList.attendence.get(position).confirmed=!attendenceList.attendence.get(position).confirmed
-                if(!attendenceList.attendence.get(position).confirmed){
-
+                if(attendenceList.attendence.get(position).confirmed){
+                    Log.w("DUPA","dupa123beforeinvoke")
+                    cancelConfirmationStudent?.invoke(attendenceList.code,attendenceList.attendence.get(position).userID).addOnFailureListener{
+                        Log.w("DUPA","dupa123invoke"+it.cause.toString())
+                        notifyItemChanged(position)
+                    }
                 }
                 else{
-
+                    Log.w("DUPA","dupa123beforeinvoke")
+                    confirmStudent?.invoke(attendenceList.code,attendenceList.attendence.get(position).userID).addOnFailureListener{
+                        Log.w("DUPA","dupa123invoke"+it.cause.toString())
+                        notifyItemChanged(position)
+                    }
                 }
-
-                //TODO 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!
-                notifyItemChanged(position)
-
-//                val intent = Intent(mContext, GalleryActivity::class.java)
-//                intent.putExtra("image_url", mDate.get(position))
-//                intent.putExtra("image_name", mSubjectName.get(position))
-//                mContext.startActivity(intent)
             }
         })
     }
@@ -94,13 +111,36 @@ class RecyclerViewAdapterAttendanceListOptions(
         return attendenceList.attendence.size
     }
 
-    fun setList(attendenceList: AttendenceList) {
+    fun getNameAndSurname(userID: String) :String{
+        var returnValue = "brak "+(userID.substring(0,6))
+        if(studentsList!=null)
+        for (user in studentsList!!){
+            if(user.userID==userID){
+                returnValue=user.surname+" "+user.name
+            }
+        }
+        return returnValue
+    }
+
+    fun setList(attendenceList: AttendenceList, studentsList: ArrayList<User>?) {
         this.attendenceList = attendenceList
+        this.studentsList = studentsList
         notifyDataSetChanged()
     }
 
+    fun setConfirmStudentFunction(function: (code:String, userID: String) -> Task<HttpsCallableResult>) {
+        confirmStudent=function
 
+    }
 
+    fun setCancleConfirmationStudentFunction(function: (code:String, userID: String) -> Task<HttpsCallableResult>) {
+        cancelConfirmationStudent=function
+
+    }
+
+//    fun setConfirmStudentFunction(function: () -> Task<HttpsCallableResult>) {
+//        confirmStudent=function
+//    }
 
 
 }

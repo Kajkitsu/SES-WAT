@@ -176,5 +176,22 @@ class FirestoreDataFunctions(){
         return attendenceListLD
     }
 
+    fun getAllStudents(allStudentsLD: MutableLiveData<ArrayList<User>> = MutableLiveData()): MutableLiveData<ArrayList<User>> {
+        var studentsList = ArrayList<User>()
+        val db = FirebaseFirestore.getInstance()
+
+        Log.d(TAG, "getAllStudents()")
+        db.collection("users").whereEqualTo("isTeacher",false)
+            .get().addOnSuccessListener {
+                    documents ->
+                for (document in documents) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    studentsList.add(document.toObject(User::class.java))
+                    allStudentsLD.value=studentsList
+                }
+            }
+        return allStudentsLD
+    }
+
 
 }

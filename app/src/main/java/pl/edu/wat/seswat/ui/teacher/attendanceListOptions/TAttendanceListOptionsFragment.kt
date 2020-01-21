@@ -20,8 +20,11 @@ import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.android.synthetic.main.fragment_t_attendance_list_options.*
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.AttendenceList
+import pl.edu.wat.seswat.database.FunctionCaller
 import pl.edu.wat.seswat.ui.teacher.TeacherData
 import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
+import java.util.*
+import kotlin.collections.HashMap
 
 class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
@@ -38,13 +41,36 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         data = (this.activity as TeacherMenuActivity).data
         mAuth = FirebaseAuth.getInstance()
-        if(data.selectedAttendenceList.value!=null){
-            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(data.selectedAttendenceList.value!!,mFunctions)
-            Log.w(TAG,"dupa123")
+        mFunctions = FirebaseFunctions.getInstance()
+
+        initRecyclerView()
+
+
+
+    }
+
+    fun initRecyclerView(){
+
+        recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(data.selectedAttendenceList.value,data.allStudents.value)
+
+        recyclerViewAdapterAttendanceListOptions.setConfirmStudentFunction{ code,userID ->
+            FunctionCaller(FirebaseFunctions.getInstance()).confirmStudent(code,userID)
+                .addOnSuccessListener{
+                    updateData()
+                    Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
+
+                }
         }
-        else{
-            recyclerViewAdapterAttendanceListOptions = RecyclerViewAdapterAttendanceListOptions(AttendenceList(), mFunctions)
+        recyclerViewAdapterAttendanceListOptions.setCancleConfirmationStudentFunction{ code,userID ->
+            FunctionCaller(FirebaseFunctions.getInstance()).cancelConfirmationStudent(code,userID)
+                .addOnSuccessListener{
+                    updateData()
+                    Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
+                }
         }
+
+
+
     }
 
 
@@ -60,7 +86,6 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         val textView: TextView = root.findViewById(R.id.textView_choose_attendance_list)
         val layout: ConstraintLayout = root.findViewById(R.id.layoutConstraint)
 
-        mFunctions = FirebaseFunctions.getInstance()
 
 
         refreshAttendanceListButton = root.findViewById(R.id.refresh_attendance_list_options_button)
@@ -76,7 +101,7 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
                 textView.visibility=View.INVISIBLE
                 layout.visibility=View.VISIBLE
 
-                recyclerViewAdapterAttendanceListOptions.setList(it)
+                recyclerViewAdapterAttendanceListOptions.setList(it,data.allStudents.value)
 
                 root.findViewById<RecyclerView>(R.id.recycler_view_present_list).setAdapter(recyclerViewAdapterAttendanceListOptions)
                 root.findViewById<RecyclerView>(R.id.recycler_view_present_list).setLayoutManager(LinearLayoutManager(this.context))
@@ -112,6 +137,8 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         data.updateAllSubjects()
     }
 
+
+
     fun closeList(code: String){
         mFunctions.getHttpsCallable("closeList").call(
             hashMapOf(
@@ -127,6 +154,8 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
             Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()
             Log.w(TAG,"addUserToListFunction:failure",it)
         }
+
+
     }
 
     fun openList(code: String){
