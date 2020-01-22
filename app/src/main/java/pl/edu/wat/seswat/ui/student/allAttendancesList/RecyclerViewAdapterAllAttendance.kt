@@ -23,10 +23,15 @@ class RecyclerViewAdapterAllAttendance(
 
     private val TAG = "RecyclerViewAdapterAllAttendance"
 
+    init {
+        this.attendenceListOfList.sortBy{ it.startDate }
+    }
+
 
     fun setList(attendenceList: ArrayList<AttendenceList>, subjectList: ArrayList<Subject> ) {
         this.attendenceListOfList = attendenceList
         this.subjectList = subjectList
+        this.attendenceListOfList.sortBy{ it.startDate }
         notifyDataSetChanged()
     }
 

@@ -1,14 +1,16 @@
 package pl.edu.wat.seswat.database
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FirestoreDataFunctions(){
     val TAG = "FirestoreDataFunctions"
 
-    fun getAllAttendanceListOfStudentLD(userID: String, myLDAttendenceList:MutableLiveData<ArrayList<AttendenceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendenceList>> {
-        var myAttendanceList = ArrayList<AttendenceList>()
+    fun getAllAttendanceListOfStudentLD(userID: String, liveDataOfAllAttendenceList:MutableLiveData<ArrayList<AttendenceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendenceList>> {
+        var allAttendanceList = ArrayList<AttendenceList>()
         val db = FirebaseFirestore.getInstance()
 
         Log.d(TAG, "AttendanceListOfStudent()")
@@ -19,7 +21,7 @@ class FirestoreDataFunctions(){
                 return@addSnapshotListener
             }
             if(queryDocumentSnapshots!=null){
-                myAttendanceList = ArrayList<AttendenceList>()
+                allAttendanceList = ArrayList<AttendenceList>()
                 Log.d(TAG, "AttendanceListOfStudent.value  ${queryDocumentSnapshots.toString()}")
                 if (queryDocumentSnapshots.isEmpty)
                     Log.d(TAG, "AttendanceListOfStudent.value is empty")
@@ -28,20 +30,21 @@ class FirestoreDataFunctions(){
                         TAG,
                         "AttendanceListOfStudent.queryDocument.value  ${queryDocument.toString()}"
                     )
-                    val mAttendenceOnThisList = queryDocument.toObject(Attendence::class.java)
+                    val attendenceOnThisList = queryDocument.toObject(Attendence::class.java)
                     queryDocument.reference.parent.parent?.addSnapshotListener { docList, e ->
                         if (e != null) {
                             Log.w(TAG, "Listen failed.", e)
                             return@addSnapshotListener
                         }
                         if (docList != null) {
-                            var myAttendence = docList.toObject(AttendenceList::class.java)!!
-                            myAttendence.attendence = ArrayList()
-                            myAttendence.attendence.add(mAttendenceOnThisList)
-                            myAttendanceList.add(myAttendence)
-                            myLDAttendenceList.value = myAttendanceList
+                            var attendenceListToAdd = docList.toObject(AttendenceList::class.java)!!
+                            attendenceListToAdd.attendence = ArrayList()
+                            attendenceListToAdd.attendence.add(attendenceOnThisList)
+                            allAttendanceList.removeIf{ it.code==attendenceListToAdd.code }
+                            allAttendanceList.add(attendenceListToAdd)
+                            liveDataOfAllAttendenceList.value = allAttendanceList
 
-                            Log.d(TAG, "AttendanceListOfStudent.value  ${myLDAttendenceList.value}")
+                            Log.d(TAG, "AttendanceListOfStudent.value  ${liveDataOfAllAttendenceList.value}")
                         }
 
                     }
@@ -51,10 +54,10 @@ class FirestoreDataFunctions(){
             }
         }
 
-        return myLDAttendenceList
+        return liveDataOfAllAttendenceList
     }
 
-    fun getAllAttendanceListOfTeacherLD(teacherID: String, myLDAttendenceList: MutableLiveData<ArrayList<AttendenceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendenceList>> {
+    fun getAllAttendanceListOfTeacherLD(teacherID: String, liveDataAllAttendenceList: MutableLiveData<ArrayList<AttendenceList>> = MutableLiveData()): MutableLiveData<ArrayList<AttendenceList>> {
 
         val db = FirebaseFirestore.getInstance()
 
@@ -67,7 +70,8 @@ class FirestoreDataFunctions(){
 
             if(documents!=null){
                 Log.d("Data change", " db.collection(\"list\").whereEqualTo(\"teacherID\",teacherID")
-                var myAttendanceList = ArrayList<AttendenceList>()
+                var allAttendanceList = ArrayList<AttendenceList>()
+                liveDataAllAttendenceList.value=allAttendanceList
                 for (doc in documents) {
                     var newAttendenceList = doc.toObject(AttendenceList::class.java)
                     doc.reference.collection("attendence").addSnapshotListener{attendenceList, e ->
@@ -81,22 +85,22 @@ class FirestoreDataFunctions(){
                             for(doc2 in attendenceList){
 
                                 newAttendenceList.attendence.add(doc2.toObject(Attendence::class.java))
-                                Log.d("ChangeFS",newAttendenceList.attendence.toString()+" "+doc2)
+                                Log.d(TAG,newAttendenceList.attendence.toString()+" "+doc2)
                             }
                         }
-                        myAttendanceList.add(newAttendenceList)
-                        myLDAttendenceList.value=myAttendanceList
 
-
+                        allAttendanceList.removeIf{ it.code==newAttendenceList.code }
+                        allAttendanceList.add(newAttendenceList)
+                        liveDataAllAttendenceList.value=allAttendanceList
                     }
-                    myLDAttendenceList.value=myAttendanceList
+
                 }
 
-                Log.d(TAG, "myLDAttendenceList.value: $myAttendanceList")
+                Log.d(TAG, "liveDataAllAttendenceList.value: $allAttendanceList")
             }
 
         }
-        return myLDAttendenceList
+        return liveDataAllAttendenceList
     }
 
 

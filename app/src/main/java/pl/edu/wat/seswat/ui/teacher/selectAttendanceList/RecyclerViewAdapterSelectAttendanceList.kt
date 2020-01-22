@@ -30,6 +30,10 @@ class RecyclerViewAdapterSelectAttendanceList(
 
     private val TAG = "AdapterSelectList"
 
+    init {
+        attendenceListArrayList?.sortBy{ it.startDate }
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -115,6 +119,7 @@ class RecyclerViewAdapterSelectAttendanceList(
 
     fun setList(attendenceList: ArrayList<AttendenceList>) {
         this.attendenceListArrayList = attendenceList
+        attendenceListArrayList?.sortBy{ it.startDate }
         notifyDataSetChanged()
     }
 

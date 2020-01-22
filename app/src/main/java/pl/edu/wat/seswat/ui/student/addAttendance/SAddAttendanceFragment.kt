@@ -13,18 +13,26 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
+import com.spartons.qrcodegeneratorreader.ScanQrCodeActivity
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.FirestoreDataFunctions
 import pl.edu.wat.seswat.ui.student.StudentData
 import pl.edu.wat.seswat.ui.student.StudentMenuActivity
+import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
+import android.content.Intent
+import android.app.Activity
+
+
+
 
 class SAddAttendanceFragment : Fragment(), View.OnClickListener {
 
     lateinit var addAttendanceButton: Button
-    lateinit var codeInputEditText: TextInputEditText
+    lateinit var codeInputEditText: EditText
     lateinit var mFunctions: FirebaseFunctions
     lateinit var mAuth: FirebaseAuth
     lateinit var data: StudentData
+    lateinit var scanQRCodeButton: Button
     val TAG = "SAddAttendanceFragment"
 
     override fun onCreateView(
@@ -35,16 +43,16 @@ class SAddAttendanceFragment : Fragment(), View.OnClickListener {
         val root = inflater.inflate(R.layout.fragment_s_add_attendance, container, false)
 
         addAttendanceButton = root.findViewById(R.id.add_attendance_button)
-        addAttendanceButton.setOnClickListener(this)
         codeInputEditText = root.findViewById(R.id.code_input_edit_text)
+        scanQRCodeButton = root.findViewById(R.id.scan_qr_code_button)
+
+        addAttendanceButton.setOnClickListener(this)
+        scanQRCodeButton.setOnClickListener(this)
 
 
         mFunctions = FirebaseFunctions.getInstance()
         mAuth = FirebaseAuth.getInstance()
         data = (this.activity as StudentMenuActivity).data
-
-
-
 
         return root
     }
@@ -66,6 +74,21 @@ class SAddAttendanceFragment : Fragment(), View.OnClickListener {
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                val result = data!!.getStringExtra("result")
+                codeInputEditText.setText(result.toString())
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+
+
 
 
     override fun onClick(v: View?) {
@@ -73,7 +96,13 @@ class SAddAttendanceFragment : Fragment(), View.OnClickListener {
             if(v.id == R.id.add_attendance_button){
                 addAttendance(codeInputEditText.text.toString())
             }
+            else if(v.id == R.id.scan_qr_code_button){
+                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                startActivityForResult(intent, 1);
+
+            }
         }
+
     }
 
 }

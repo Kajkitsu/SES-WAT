@@ -57,9 +57,10 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         recyclerViewAdapterAttendanceListOptions.setConfirmStudentFunction{ code,userID ->
             FunctionCaller(FirebaseFunctions.getInstance()).confirmStudent(code,userID)
                 .addOnSuccessListener{
-                    updateData()
                     Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
-
+                }
+                .addOnFailureListener{
+                    Toast.makeText(this.context,"Błąd: "+it.cause,Toast.LENGTH_LONG).show()
                 }
         }
         recyclerViewAdapterAttendanceListOptions.setCancleConfirmationStudentFunction{ code,userID ->
@@ -67,6 +68,8 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
                 .addOnSuccessListener{
                     updateData()
                     Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
+                }.addOnFailureListener{
+                    Toast.makeText(this.context,"Błąd: "+it.cause,Toast.LENGTH_LONG).show()
                 }
         }
 
@@ -96,11 +99,11 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         setAdapterAndRecyclerView(root)
 
         data.selectedAttendenceList.observe(this, Observer {
-            Log.d(TAG,"codeOfSelectAttendanceList.observe")
+            Log.d(TAG,"selectedAttendenceList.observe"+it.attendence.toString())
             setAdapterAndRecyclerView(root)
         })
         data.allAttendenceLists.observe(this, Observer {
-            Log.d(TAG,"allAttendenceLists.observe")
+            Log.d(TAG,"allAttendenceLists.observe"+it.toString())
             data.updateAttendenceList()
         })
 
@@ -159,11 +162,10 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         ).addOnSuccessListener {
             Log.d(TAG, it.data.toString())
             Toast.makeText(this.context,"Sukces", Toast.LENGTH_LONG).show()
-            updateData()
             openOrCloseSwitch.isEnabled=true
         }.addOnFailureListener {
-            Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()
-            Log.w(TAG,"addUserToListFunction:failure",it)
+            Toast.makeText(this.context,"Błąd: "+it.cause, Toast.LENGTH_LONG).show()
+            Log.w(TAG,"addUserToListFunction:failure"+it.cause)
         }
 
 
@@ -181,8 +183,8 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
             updateData()
             openOrCloseSwitch.isEnabled=true
         }.addOnFailureListener {
-            Toast.makeText(this.context,"Failure", Toast.LENGTH_LONG).show()
-            Log.w(TAG,"addUserToListFunction:failure",it)
+            Toast.makeText(this.context,"Błąd "+it.cause, Toast.LENGTH_LONG).show()
+            Log.w(TAG,"addUserToListFunction:failure"+it.cause)
         }
     }
 

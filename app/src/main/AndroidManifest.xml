@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="pl.edu.wat.seswat">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.hardware.camera" />
+    <uses-permission android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +17,7 @@
         <activity
             android:name=".ui.student.StudentMenuActivity"
             android:label="@string/title_activity_main_menu" />
+        <activity android:name="com.spartons.qrcodegeneratorreader.ScanQrCodeActivity" />
         <activity
             android:name=".ui.teacher.TeacherMenuActivity" />
         <activity android:name=".LoginActivity">
@@ -27,3 +31,4 @@
     </application>
 
 </manifest>
+

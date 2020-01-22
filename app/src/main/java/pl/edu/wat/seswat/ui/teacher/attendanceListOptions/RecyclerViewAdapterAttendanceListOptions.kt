@@ -37,6 +37,7 @@ class RecyclerViewAdapterAttendanceListOptions(
         }
         else{
             attendenceList=nullableAttendenceList
+            attendenceList.attendence.sortBy{ it.timeOfAdd }
         }
     }
 
@@ -125,6 +126,7 @@ class RecyclerViewAdapterAttendanceListOptions(
     fun setList(attendenceList: AttendenceList, studentsList: ArrayList<User>?) {
         this.attendenceList = attendenceList
         this.studentsList = studentsList
+        this.attendenceList.attendence.sortBy{ it.timeOfAdd }
         notifyDataSetChanged()
     }
 
