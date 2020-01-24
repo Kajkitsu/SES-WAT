@@ -1,7 +1,9 @@
 package pl.edu.wat.seswat.ui.student
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
@@ -45,7 +47,6 @@ class StudentMenuActivity : AppCompatActivity(){
 
 
     }
-
 
 
     fun initStudentData(){

@@ -18,8 +18,8 @@
             android:name=".ui.student.StudentMenuActivity"
             android:label="@string/title_activity_main_menu" />
         <activity android:name="com.spartons.qrcodegeneratorreader.ScanQrCodeActivity" />
-        <activity
-            android:name=".ui.teacher.TeacherMenuActivity" />
+        <activity android:name=".ui.teacher.TeacherMenuActivity" />
+        <activity android:name=".ui.teacher.ShowQRCodeActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

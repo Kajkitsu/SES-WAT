@@ -1,6 +1,7 @@
 package pl.edu.wat.seswat.ui.teacher.attendanceListOptions
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,10 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import com.spartons.qrcodegeneratorreader.ScanQrCodeActivity
 import kotlinx.android.synthetic.main.fragment_t_attendance_list_options.*
+import pl.edu.wat.seswat.QRCodeQenerator.QRCodeHelper
 import pl.edu.wat.seswat.R
 import pl.edu.wat.seswat.database.AttendenceList
 import pl.edu.wat.seswat.database.FunctionCaller
+import pl.edu.wat.seswat.ui.teacher.ShowQRCodeActivity
 import pl.edu.wat.seswat.ui.teacher.TeacherData
 import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
 import java.util.*
@@ -29,10 +34,12 @@ import kotlin.collections.HashMap
 class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
 
+
     private var TAG = "AttendanceListOptions"
     lateinit var data: TeacherData
     lateinit var recyclerViewAdapterAttendanceListOptions: RecyclerViewAdapterAttendanceListOptions
     lateinit var refreshAttendanceListButton: Button
+    lateinit var showQrCodeButton: Button
     lateinit var openOrCloseSwitch: Switch
     lateinit var mAuth: FirebaseAuth
     lateinit var mFunctions: FirebaseFunctions
@@ -43,11 +50,7 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         data = (this.activity as TeacherMenuActivity).data
         mAuth = FirebaseAuth.getInstance()
         mFunctions = FirebaseFunctions.getInstance()
-
         initRecyclerView()
-
-
-
     }
 
     fun initRecyclerView(){
@@ -66,7 +69,6 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         recyclerViewAdapterAttendanceListOptions.setCancleConfirmationStudentFunction{ code,userID ->
             FunctionCaller(FirebaseFunctions.getInstance()).cancelConfirmationStudent(code,userID)
                 .addOnSuccessListener{
-                    updateData()
                     Toast.makeText(this.context,(it.data as HashMap<*, *>)["status"].toString(),Toast.LENGTH_LONG).show()
                 }.addOnFailureListener{
                     Toast.makeText(this.context,"Błąd: "+it.cause,Toast.LENGTH_LONG).show()
@@ -91,20 +93,27 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
         refreshAttendanceListButton = root.findViewById(R.id.refresh_attendance_list_options_button)
         openOrCloseSwitch = root.findViewById(R.id.switch_open_or_close)
+        showQrCodeButton = root.findViewById(R.id.show_qr_code_button)
 
         refreshAttendanceListButton.setOnClickListener(this)
         openOrCloseSwitch.setOnClickListener(this)
+        showQrCodeButton.setOnClickListener(this)
 
 
         setAdapterAndRecyclerView(root)
 
         data.selectedAttendenceList.observe(this, Observer {
-            Log.d(TAG,"selectedAttendenceList.observe"+it.attendence.toString())
-            setAdapterAndRecyclerView(root)
+            if(it!=null){
+                Log.d(TAG,"selectedAttendenceList.observe"+it.attendence.toString())
+                setAdapterAndRecyclerView(root)
+            }
+
         })
         data.allAttendenceLists.observe(this, Observer {
-            Log.d(TAG,"allAttendenceLists.observe"+it.toString())
-            data.updateAttendenceList()
+            if(it!=null){
+                Log.d(TAG,"allAttendenceLists.observe"+it.toString())
+                data.updateAttendenceList()
+            }
         })
 
         return root
@@ -147,10 +156,6 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
     }
 
-    fun updateData(){
-      //  setAdapterAndRecyclerView(mRoot)
-    }
-
 
 
     fun closeList(code: String){
@@ -180,7 +185,6 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
         ).addOnSuccessListener {
             Log.d(TAG, it.data.toString())
             Toast.makeText(this.context,"Sukces", Toast.LENGTH_LONG).show()
-            updateData()
             openOrCloseSwitch.isEnabled=true
         }.addOnFailureListener {
             Toast.makeText(this.context,"Błąd "+it.cause, Toast.LENGTH_LONG).show()
@@ -191,19 +195,21 @@ class TAttendanceListOptionsFragment : Fragment(), View.OnClickListener {
 
 
     override fun onClick(v: View) {
-        val i = v.id
-        if (i == R.id.refresh_attendance_list_options_button) {
-            updateData()
-        }
-        else if(i == R.id.switch_open_or_close &&  data.selectedAttendenceList.value!=null){
+        if(v.id == R.id.switch_open_or_close &&  data.selectedAttendenceList.value!=null){
             openOrCloseSwitch.isEnabled=false
             Log.d(TAG,"DUPA")
             if(switch_open_or_close.text=="Otwarte"){
                 closeList(data.selectedAttendenceList.value!!.code)
             }
-            else{
+            else {
                 openList(data.selectedAttendenceList.value!!.code)
             }
         }
-    }
+        else if(v.id == R.id.show_qr_code_button){
+            val intent = Intent(activity, ShowQRCodeActivity::class.java)
+            intent.putExtra("code",data.selectedAttendenceList.value?.code)
+            startActivityForResult(intent, 1)
+            }
+        }
+
 }

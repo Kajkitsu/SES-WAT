@@ -21,8 +21,8 @@ import pl.edu.wat.seswat.ui.student.StudentMenuActivity
 import pl.edu.wat.seswat.ui.teacher.TeacherMenuActivity
 import android.content.Intent
 import android.app.Activity
-
-
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 
 
 class SAddAttendanceFragment : Fragment(), View.OnClickListener {
@@ -98,11 +98,12 @@ class SAddAttendanceFragment : Fragment(), View.OnClickListener {
             }
             else if(v.id == R.id.scan_qr_code_button){
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 1)
 
             }
         }
 
     }
+
 
 }
